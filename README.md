@@ -59,8 +59,17 @@ GitHub Pages：<https://cheng12443.github.io/e-motion-galaxy/>
     └── notes/              离线校验脚本（语法、结构、投影数学）
 ```
 
-## 关于数据（重要）
+## 真机自检（?debug=1）
 
+因为本机环境抓不到手机浏览器的 JS console（做过阳性对照：故意报错的页面加载成功，但 `logcat` 里一行 CONSOLE 都没有 —— 这个通道在 Edge 上是关的），所以每个页面都内置了一个**零依赖自检浮层**：
+
+- 访问任意页面时加上 `?debug=1`（如 `04a-compare.html?debug=1`），页面底部会出现一条红色横条，实时显示 `window.onerror` / `unhandledrejection` / `console.error` / `console.warn` 的条数与内容。
+- 显示「EMG DEBUG · 0 条运行时报错 ✓」即代表该页无运行时报错。
+- 不带该参数时**完全没有任何副作用**（注入的钩子直接 return，不建节点、不改 console）。
+
+同类工具的公开方案是 [Eruda](https://github.com/liriliri/eruda)，但本站坚持零外链，所以用 20 行原生代码实现了等价的自查能力。
+
+## 关于数据（重要）
 `data/*.json` 里的**全部数值都是占位示例**，每个文件带 `_meta.dataMode = "placeholder"`，界面上对应位置都打了「示例数据 · 可替换为官方数据」角标；`price: null` 的位置一律显示 `—`。
 
 **本项目不编造官方参数。** 正式版会把占位值替换为可溯源的公开资料，并逐项标注来源与获取日期。
