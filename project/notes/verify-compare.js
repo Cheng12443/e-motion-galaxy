@@ -257,8 +257,9 @@
     $('#infoA').innerHTML=A.sub+' · 续航 '+A.range+' km · '+A.speed+' km/h <span class="badge">示例</span>';
     $('#infoB').innerHTML=B.sub+' · 续航 '+B.range+' km · '+B.speed+' km/h <span class="badge">示例</span>';
     $('#lnOpen').href="03-model.html?id="+A.id;
-    var res=drawRadar(radarT||1);
+    var res=drawRadar(1);          /* 先算一次用于条形图 */
     renderBars(res);
+    animateRadar();                /* 再从中心生长一遍（同帧内重置，不会闪） */
     try{ localStorage.setItem('emg.compare',JSON.stringify([A.id,B.id])); }catch(e){}
   }
 
