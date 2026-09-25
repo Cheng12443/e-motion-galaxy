@@ -426,12 +426,12 @@ footer.site .legal{margin:26px auto 0;max-width:var(--maxw);color:var(--lo);font
   function renderBars(res){
     var A=res.A,B=res.B;
     var rows=[
-      {label:"续航",   k:"range", u:"km",   d:160},
-      {label:"最高速度",k:"speed", u:"km/h", d:120},
-      {label:"智能功能",k:"feat",  u:"项",   d:9}
+      {label:"续航",    get:function(m){return m.range},       u:"km",   d:160},
+      {label:"最高速度",get:function(m){return m.speed},       u:"km/h", d:120},
+      {label:"智能功能",get:function(m){return m.feat.length}, u:"项",   d:9}
     ];
     $('#bars').innerHTML=rows.map(function(r){
-      var av=A[r.k], bv=B[r.k];
+      var av=r.get(A), bv=r.get(B);
       var pctA=Math.min(100,av/r.d*100), pctB=Math.min(100,bv/r.d*100);
       var d=bv-av, dt=(d===0?"持平":(d>0?"B 高 ":"A 高 ")+Math.abs(d)+r.u);
       return '<div class="bar"><div class="bt"><span>'+r.label+'</span>'+
