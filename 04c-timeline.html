@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="is-night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>品牌技术时间轴 · 滚动分支叙事｜九号电流宇宙（非官方）</title>
+<meta name="description" content="电流沿光轨流动，车辆穿越技术里程碑；城市 / 越野 / 长途三条分支叙事。非官方粉丝网站，含 Konami 彩蛋。">
+<style>
+:root{
+  --bg:#050505; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
+  --hi:#F2F5F7; --mid:#98A2AE; --lo:#5A636E;
+  --volt:#C6FF00; --arc:#00E5FF; --heat:#FF6B00;
+  --accent:#C6FF00;
+  --glass:rgba(255,255,255,.04);
+  --fd:"Orbitron","Space Grotesk","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+  --fu:"Space Grotesk","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+  --fm:ui-monospace,"SFMono-Regular",monospace;
+  --px:clamp(20px,5vw,88px); --maxw:1440px;
+  --d2:240ms; --d3:420ms; --d4:720ms; --eo:cubic-bezier(.22,.61,.36,1);
+  --railAspect:1400 / 760;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--hi);font-family:var(--fu);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--accent);color:#04060a}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.caps{font-family:var(--fd);text-transform:uppercase;letter-spacing:.18em}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.4;mix-blend-mode:overlay;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px)}
+.bgglow{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(80% 55% at 15% 0%,rgba(198,255,0,.08),transparent 55%),
+             radial-gradient(80% 60% at 95% 100%,rgba(0,229,255,.08),transparent 60%)}
+header.hudbar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;gap:14px;align-items:center;
+  justify-content:space-between;padding:13px var(--px);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;
+  background:linear-gradient(180deg,rgba(5,5,5,.94),rgba(5,5,5,0))}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--fd)}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulse 2.2s var(--eo) infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hudbar nav{display:flex;gap:15px;color:var(--mid);flex-wrap:wrap}
+.hudbar nav a:hover,.hudbar nav a[aria-current]{color:var(--accent)}
+
+section.intro{position:relative;z-index:2;padding:clamp(100px,15vh,160px) var(--px) clamp(26px,5vh,50px);
+  max-width:var(--maxw);margin:0 auto}
+.kicker{color:var(--accent);font-size:.76rem;letter-spacing:.3em;font-family:var(--fd)}
+h1{font-family:var(--fd);font-size:clamp(1.9rem,4.6vw,3.4rem);line-height:1.05;margin:.2em 0 .1em}
+p.sub{color:var(--mid);margin:0 0 22px;font-size:.92rem;max-width:66ch}
+.branch{display:flex;gap:9px;flex-wrap:wrap}
+.branch button{border:1px solid var(--line2);border-radius:999px;padding:9px 17px;font-size:.85rem;color:var(--mid);
+  transition:all var(--d2) var(--eo);display:inline-flex;gap:8px;align-items:center}
+.branch button:hover{color:var(--hi);border-color:var(--hi)}
+.branch button[aria-pressed="true"]{background:var(--accent);color:#04060a;border-color:var(--accent);font-weight:700}
+.branch button .n{font-family:var(--fd);font-size:.72rem;opacity:.7}
+
+/* 光轨 */
+#rail-stage{position:relative;z-index:2}
+.railsec{position:relative}
+.railsec .stick{position:sticky;top:0;height:100svh;display:grid;align-content:center;
+  padding:clamp(84px,12vh,130px) var(--px) 34px;max-width:var(--maxw);margin:0 auto}
+.railhead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.railhead .t{font-family:var(--fd);font-size:clamp(1rem,2.2vw,1.5rem)}
+.railhead .h{display:flex;gap:16px;font-size:.72rem;letter-spacing:.14em;color:var(--lo);font-family:var(--fm);text-transform:uppercase}
+.railhead .h b{color:var(--accent);font-family:var(--fd)}
+.rail{position:relative;width:100%;aspect-ratio:var(--railAspect);margin-inline:auto}
+.rail svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.node{position:absolute;left:0;top:0;pointer-events:none;opacity:0;transition:opacity var(--d4) var(--eo)}
+.node.on{opacity:1}
+.node .box{border:1px solid var(--line2);border-radius:12px;padding:9px 12px;min-width:120px;max-width:260px;
+  background:rgba(8,10,13,.86);backdrop-filter:blur(10px);transition:border-color var(--d3),box-shadow var(--d3)}
+.node.act .box{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 14px 44px rgba(0,0,0,.6)}
+.node .yr{font-family:var(--fm);font-size:10px;letter-spacing:.18em;color:var(--lo)}
+.node .nm{font-size:.9rem;font-family:var(--fd);letter-spacing:.02em;margin:2px 0 3px}
+.node .tp{font-size:.76rem;color:var(--mid);line-height:1.5}
+.node.act .yr{color:var(--accent)}
+.railfoot{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.pbar{flex:1;min-width:160px;height:3px;border-radius:3px;background:rgba(255,255,255,.09);overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--arc),var(--accent));transition:width .12s linear}
+.railtip{font-size:.7rem;letter-spacing:.14em;color:var(--lo);font-family:var(--fm)}
+
+/* 里程碑全表 */
+section.all{position:relative;z-index:2;padding:clamp(40px,8vh,90px) var(--px);max-width:var(--maxw);margin:0 auto;
+  border-top:1px solid var(--line)}
+h2{font-family:var(--fd);font-size:clamp(1.2rem,2.6vw,1.8rem);margin:0 0 6px}
+.mlist{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:22px}
+.mcard{border:1px solid var(--line);border-radius:13px;padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.006));
+  position:relative;overflow:hidden}
+.mcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);opacity:.75}
+.mcard .er{font-size:10px;letter-spacing:.2em;color:var(--accent);font-family:var(--fd)}
+.mcard h3{font-size:.98rem;margin:8px 0 6px;font-family:var(--fd)}
+.mcard p{margin:0;color:var(--mid);font-size:.85rem}
+.mcard .kw{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.kw span{border:1px solid var(--line2);border-radius:999px;padding:2px 9px;font-size:.72rem;color:var(--mid)}
+.badge{display:inline-block;border:1px solid var(--line2);border-radius:999px;padding:1px 8px;font-size:10px;letter-spacing:.08em;color:var(--lo)}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:11px 19px;border-radius:999px;border:1px solid var(--line2);
+  background:var(--glass);font-size:.86rem;transition:all var(--d2) var(--eo)}
+.btn:hover{border-color:var(--accent);transform:translateY(-2px)}
+.egg{position:fixed;left:50%;top:78px;transform:translate(-50%,-18px);opacity:0;z-index:60;
+  padding:13px 22px;border-radius:14px;border:1px solid var(--accent);background:rgba(8,10,13,.92);backdrop-filter:blur(12px);
+  box-shadow:0 0 46px rgba(198,255,0,.16);transition:opacity var(--d4),transform var(--d4);text-align:center}
+.egg.on{opacity:1;transform:translate(-50%,0)}
+.egg .e1{font-family:var(--fd);font-size:1rem;color:var(--accent);letter-spacing:.08em}
+.egg .e2{font-size:10px;letter-spacing:.18em;color:var(--mid);font-family:var(--fm)}
+footer.site{position:relative;z-index:2;border-top:1px solid var(--line);
+  padding:clamp(32px,6vh,60px) var(--px) calc(var(--px) + 30px);color:var(--mid);font-size:.88rem}
+footer.site .fgrid{max-width:var(--maxw);margin:0 auto;display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+footer.site p{margin:0 0 6px}
+footer.site strong{color:var(--hi)}
+footer.site a.mail{color:var(--accent);border-bottom:1px solid rgba(198,255,0,.3)}
+footer.site .legal{margin:26px auto 0;max-width:var(--maxw);color:var(--lo);font-size:.8rem;line-height:1.75}
+
+@media (max-width:900px){
+  :root{--railAspect:760 / 1400}
+  .rail{width:58%}
+  /* 小屏：所有节点卡改为「光轨正下方居中」，且只显示当前这一个，避免任何横向溢出 */
+  .node{left:50%!important;top:100%!important;transform:translate(-50%,10px)!important;width:min(88%,430px)}
+  .node .box{max-width:none}
+  .node:not(.act){display:none!important}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  .scan{display:none}
+}
+</style>
+</head>
+<body>
+<div class="bgglow" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<header class="hudbar">
+  <div class="brand"><span class="dot" aria-hidden="true"></span> E-MOTION GALAXY</div>
+  <nav aria-label="站点小节">
+    <a href="01-hero.html">01 启动</a><a href="02-galaxy.html">02 系列星系</a>
+    <a href="03-model.html">03 车型拆解</a><a href="04a-compare.html">04 对比</a>
+  </nav>
+</header>
+
+<main>
+<section class="intro" aria-labelledby="tT">
+  <div class="kicker">TECH TIMELINE · 滚动分支叙事</div>
+  <h1 id="tT">电流沿光轨前进，<br>穿过每一个技术节点</h1>
+  <p class="sub">选一条路线，向下滚动 —— 车辆沿光轨行驶，电流流过时间线，抵达的节点会亮起。三条路线各有自己的轨迹、配色与节点组合；<b>选过的路线会记在本机</b>。</p>
+  <div class="branch" id="branch" role="group" aria-label="选择叙事分支"></div>
+  <p class="sub" style="margin-top:16px;font-size:.82rem">
+    时间轴内容为公开技术名词的整理（三电 / RideyGo / 整车 OTA / TCS·ABS·EABS / 车规级验证），
+    <b>年份未核实的一律标注「20XX · 待核」</b>，不代表官方发布顺序。
+  </p>
+</section>
+
+<section id="rail-stage" class="railsec" style="height:440vh" aria-label="技术时间轴动画">
+  <div class="stick">
+    <div class="railhead">
+      <div class="t" id="railTitle">城市线 · 城市通勤的智能化</div>
+      <div class="h"><span>PROGRESS <b id="pct">0%</b></span><span>NODE <b id="nodeN">0 / 3</b></span>
+        <span class="badge">示意图 · 非官方数据</span></div>
+    </div>
+    <div class="rail" id="rail">
+      <svg id="railsvg" viewBox="0 0 1400 760" role="img" aria-label="技术时间轴光轨示意">
+        <defs>
+          <linearGradient id="gRail" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#C6FF00"/>
+          </linearGradient>
+          <filter id="fGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <g id="grid" opacity=".5"></g>
+        <path id="pDim"  d="" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="3" stroke-dasharray="2 9"/>
+        <path id="pWide" d="" fill="none" stroke="url(#gRail)" stroke-width="17" stroke-linecap="round" opacity=".16"/>
+        <path id="pGlow" d="" fill="none" stroke="url(#gRail)" stroke-width="6.5" stroke-linecap="round"/>
+        <g id="flowG"></g>
+          <g id="nodesG"></g>
+          <g id="vehG">
+            <g id="vehInner">
+              <ellipse cx="0" cy="26" rx="56" ry="9" fill="rgba(0,0,0,.55)"/>
+              <circle cx="-38" cy="6" r="20" fill="#080A0D" stroke="rgba(255,255,255,.35)" stroke-width="2.5"/>
+              <circle cx="38" cy="6" r="20" fill="#080A0D" stroke="rgba(255,255,255,.35)" stroke-width="2.5"/>
+              <path d="M-44 -2 L-6 -12 L34 -12 L50 4 L44 16 L-40 16 Z" fill="var(--accent)" opacity=".92"/>
+              <path d="M-6 -12 L14 -26 L38 -22 L34 -12 Z" fill="var(--accent)" opacity=".7"/>
+              <circle cx="52" cy="-4" r="5" fill="#F2F5F7"/>
+            </g>
+          </g>
+      </svg>
+      <div id="nodeLayer"></div>
+    </div>
+    <div class="railfoot">
+      <div class="pbar"><i id="pfill"></i></div>
+      <div class="railtip" id="railtip">↓ 向下滚动，让电流走完这条线</div>
+    </div>
+  </div>
+</section>
+
+<section class="all" aria-labelledby="aT">
+  <div class="kicker">MILESTONES</div>
+  <h2 id="aT">当前路线的全部节点</h2>
+  <p class="sub">光轨上会亮起的就是下面这些。它们是公开技术名词的整理，不构成官方时间线。</p>
+  <div class="mlist" id="mlist"></div>
+  <div style="margin-top:28px;display:flex;gap:10px;flex-wrap:wrap">
+    <a class="btn" href="03-model.html">← 回车型拆解</a>
+    <a class="btn" href="index.html">站点索引</a>
+    <button class="btn" id="btnHint">提示：这一页有彩蛋</button>
+  </div>
+</section>
+</main>
+
+<footer class="site">
+  <div class="fgrid">
+    <div>
+      <p><strong>非官方粉丝网站，仅用于学习与展示。</strong></p>
+      <p>本站与 Segway-Ninebot 无任何隶属或合作关系，不销售任何产品。</p>
+    </div>
+    <div>
+      <p>辅助工具：DeepSeek</p>
+      <p>创作者：苏好好</p>
+      <p>邮箱：<a class="mail" href="mailto:3348304834@qq.com">3348304834@qq.com</a></p>
+    </div>
+    <div>
+      <p>数据来源说明</p>
+      <p style="color:var(--lo);font-size:.82rem">时间轴为公开技术名词的整理，年份未核实处已标注「待核」；不代表官方发布顺序或官方参数。</p>
+    </div>
+  </div>
+  <p class="legal">免责声明：页面图形均为原创几何示意，未使用任何未经授权的官方图片、商标或摄影素材。若权利人认为内容不妥，请通过上方邮箱联系，我们将立即调整或删除。</p>
+</footer>
+
+<div class="egg" id="egg" role="status" aria-live="polite" aria-hidden="true"></div>
+
+<script>
+(function(){
+  "use strict";
+  /* ================= 里程碑（公开技术名词整理，非官方时间线） ================= */
+  var MS=[
+    {id:"voltage-core",era:"电流 1.0",year:null,layer:"三电系统",title:"三电自成一体",
+     branch:"all",summary:"自研直驱轮毂电机 + 锂电池与 BMS 充放电管理 + FOC 矢量控制电控，把效率、平顺与能量回收交给同一套算法。",
+     kw:["直驱轮毂电机","BMS","FOC 矢量控制"]},
+    {id:"software-defined",era:"电流 2.0",year:null,layer:"智能系统",title:"软件定义硬件",
+     branch:"city",summary:"RideyGo 把「钥匙」这个概念移除：感应解锁、离车自动落锁、App 远程控制；整车 OTA 让电控、电池、仪表的底层固件可以在线更新。",
+     kw:["RideyGo","整车 OTA","数据闭环"]},
+    {id:"active-safety",era:"电流 3.0",year:null,layer:"主动安全",title:"主动安全下放",
+     branch:"night",summary:"TCS 牵引力控制在湿滑起步与过弯时抑制后轮打滑，ABS 防止紧急制动抱死，EABS 在刹车同时把动能回收进电池。",
+     kw:["TCS","ABS","EABS 能量回收"]},
+    {id:"range-engineering",era:"电流 3.5",year:null,layer:"电池与能量",title:"把续航当成工程问题",
+     branch:"long",summary:"低温管理、循环寿命控制与能量回收策略共同决定「每一度电能跑多远」，而不是单看容量数字。",
+     kw:["低温管理","循环寿命","能量回收策略"]},
+    {id:"chassis-craft",era:"电流 4.0",year:null,layer:"底盘与制造",title:"车规级耐久",
+     branch:"trail",summary:"碳素钢车架、前后碟刹、液压减震是基本盘；淋雨、振动、盐雾按车规级做耐久验证，才是较劲的地方。",
+     kw:["碳素钢车架","液压减震","车规级验证"]},
+    {id:"system-evolution",era:"电流 ∞",year:null,layer:"体系",title:"还在持续进化的系统",
+     branch:"all",summary:"护城河不在某一项配置，而在三电自研、软件定义硬件、主动安全三层能力叠加之后的持续迭代。",
+     kw:["三层能力","持续迭代"]}
+  ];
+  /* 分支：path = 控制点（桌面横向坐标），会把 (x,y) 交换得到移动端纵向轨迹 */
+  var BRANCHES={
+    city:{id:"city",name:"城市线",sub:"城市通勤的智能化",accent:"#C6FF00",
+      title:"城市线 · 城市通勤的智能化",
+      match:["all","city"],
+      pts:[[70,430],[340,300],[660,392],[980,246],[1330,320]]},
+    trail:{id:"trail",name:"越野线",sub:"底盘与车规级耐久",accent:"#FF6B00",
+      title:"越野线 · 底盘与非铺装耐久",
+      match:["all","trail"],
+      pts:[[70,300],[300,500],[620,214],[940,486],[1330,250]]},
+    long:{id:"long",name:"长途线",sub:"把续航当工程问题",accent:"#00E5FF",
+      title:"长途线 · 电池与能量工程",
+      match:["all","long"],
+      pts:[[70,520],[380,452],[720,352],[1040,236],[1330,168]]}
+  };
+  var EGG_BRANCH={id:"infinity",name:"电流 ∞",sub:"隐藏路线 · 全节点",accent:"#FF6B00",
+    title:"隐藏线 · 电流 ∞（全节点）",match:["all","city","night","long","trail"],
+    pts:[[70,400],[260,180],[520,560],[780,140],[1060,540],[1330,260]]};
+
+  var $=function(s,r){return (r||document).querySelector(s)};
+  var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+  var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var MQ=window.matchMedia('(max-width:900px)');
+  var root=document.documentElement;
+
+  /* ---------- 平滑路径：控制点 → 三次贝塞尔（Catmull-Rom 近似） ---------- */
+  function smooth(pts,vertical){
+    var p=pts.map(function(q){return vertical?[q[1],q[0]]:[q[0],q[1]]});
+    var d="M"+p[0][0]+" "+p[0][1];
+    for(var i=0;i<p.length-1;i++){
+      var p0=p[i-1]||p[i], p1=p[i], p2=p[i+1], p3=p[i+2]||p2;
+      var c1=[p1[0]+(p2[0]-p0[0])/6, p1[1]+(p2[1]-p0[1])/6];
+      var c2=[p2[0]-(p3[0]-p1[0])/6, p2[1]-(p3[1]-p1[1])/6];
+      d+=" C"+c1[0].toFixed(1)+" "+c1[1].toFixed(1)+" "+c2[0].toFixed(1)+" "+c2[1].toFixed(1)+" "+
+         p2[0].toFixed(1)+" "+p2[1].toFixed(1);
+    }
+    return d;
+  }
+
+  /* ---------- 状态 ---------- */
+  var S={branch:"city",egg:false,ev:false};
+  var el={
+    svg:$('#railsvg'), dim:$('#pDim'), wide:$('#pWide'), glow:$('#pGlow'), veh:$('#vehG'), vehIn:$('#vehInner'),
+    grid:$('#grid'), flow:$('#flowG'), nodes:$('#nodesG'), layer:$('#nodeLayer'),
+    pfill:$('#pfill'), pct:$('#pct'), nodeN:$('#nodeN'), title:$('#railTitle'), tip:$('#railtip'),
+    mlist:$('#mlist'), branch:$('#branch'), egg:$('#egg'), sec:$('#rail-stage')
+  };
+  var pathDim=null, len=0, vertical=false, NF=0.76, F0=0.12;   /* 节点落在光轨 12%~88% 区间 */
+  function fracOf(i,n){ return F0 + (n>1? i/(n-1):0.5)*NF; }
+
+  function milestones(){
+    var b=cur(), list=MS.filter(function(m){ return b.match.indexOf(m.branch)>=0; });
+    return list;
+  }
+  function cur(){ return S.egg?EGG_BRANCH:BRANCHES[S.branch]; }
+
+  /* ---------- 渲染 ---------- */
+  function renderBranchBtns(){
+    var html=Object.keys(BRANCHES).map(function(k){
+      var b=BRANCHES[k];
+      return '<button data-b="'+k+'" aria-pressed="'+(k===S.branch&&!S.egg)+'">'+
+        '<span class="n">'+b.name+'</span>'+b.sub+'</button>';
+    }).join("");
+    if(S.egg) html+='<button data-b="infinity" aria-pressed="true" style="border-color:#FF6B00;color:#FF6B00">'+
+      '<span class="n">电流 ∞</span>隐藏路线 · 已解锁</button>';
+    el.branch.innerHTML=html;
+  }
+  function renderRail(){
+    var b=cur();
+    root.style.setProperty('--accent',b.accent);
+    el.title.textContent=b.title;
+    el.svg.setAttribute('viewBox', vertical? "0 0 760 1400" : "0 0 1400 760");
+    var d=smooth(b.pts,vertical);
+    el.dim.setAttribute('d',d); el.glow.setAttribute('d',d); el.wide.setAttribute('d',d);
+    pathDim=el.dim;
+    try{ len=pathDim.getTotalLength(); }catch(e){ len=0; }
+    el.glow.setAttribute('stroke-dasharray',len);
+    /* 网格 */
+    var g="",W=vertical?760:1400,H=vertical?1400:760;
+    for(var x=60;x<W;x+=90) g+='<line x1="'+x+'" y1="0" x2="'+x+'" y2="'+H+'" stroke="rgba(255,255,255,.045)"/>';
+    for(var y=60;y<H;y+=90) g+='<line x1="0" y1="'+y+'" x2="'+W+'" y2="'+y+'" stroke="rgba(255,255,255,.045)"/>';
+    el.grid.innerHTML=g;
+    /* 里程碑节点（位置用 getPointAtLength 取，保证落在光轨上） */
+    var ms=milestones(), dots="";
+    el.layer.innerHTML="";
+    ms.forEach(function(m,i){
+      var f=fracOf(i,ms.length);
+      var pt=pathDim.getPointAtLength(len*f);
+      dots+='<g data-dot="'+m.id+'" opacity="0">'+
+        '<circle cx="'+pt.x.toFixed(1)+'" cy="'+pt.y.toFixed(1)+'" r="9" fill="#0A0D11" stroke="rgba(255,255,255,.4)" stroke-width="2.5"/>'+
+        '<circle cx="'+pt.x.toFixed(1)+'" cy="'+pt.y.toFixed(1)+'" r="3.4" fill="'+b.accent+'"/>'+
+        '<text x="'+pt.x.toFixed(1)+'" y="'+(pt.y-20).toFixed(1)+'" text-anchor="middle" font-size="13" '+
+        'font-family="ui-monospace,monospace" fill="rgba(255,255,255,.5)">0'+(i+1)+'</text></g>';
+      var nd=document.createElement('div');
+      nd.className="node"; nd.dataset.node=m.id;
+      if(!MQ.matches){
+        var W2=1400,H2=760;
+        nd.style.left=(pt.x/W2*100).toFixed(2)+"%";
+        nd.style.top=(pt.y/H2*100).toFixed(2)+"%";
+        nd.style.transform = (i%2===0) ? "translate(-50%,-116%)" : "translate(-50%,18%)";
+      }
+      nd.innerHTML='<div class="box"><div class="yr">'+m.era+' · '+(m.year||"20XX · 待核")+
+        '</div><div class="nm">'+m.title+'</div><div class="tp">'+m.layer+'</div></div>';
+      el.layer.appendChild(nd);
+    });
+    el.nodes.innerHTML=dots;
+    /* 全表 */
+    el.mlist.innerHTML=ms.map(function(m){
+      return '<article class="mcard"><div class="er">'+m.era+' · '+(m.year||"20XX · 待核")+'</div>'+
+        '<h3>'+m.title+'</h3><p>'+m.summary+'</p><div class="kw">'+
+        m.kw.map(function(k){return '<span>'+k+'</span>'}).join("")+'</div>'+
+        '<p style="margin-top:10px"><span class="badge">'+m.layer+'</span></p></article>';
+    }).join("");
+    renderBranchBtns();
+  }
+
+  /* ---------- 电流流动（光轨上跑的光点） ---------- */
+  var flowDots=[];
+  (function initFlow(){
+    for(var i=0;i<7;i++){
+      var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('r','3.6'); c.setAttribute('fill','rgba(255,255,255,.75)');
+      el.flow.appendChild(c); flowDots.push(c);
+    }
+  })();
+
+  /* ---------- 滚动 ---------- */
+  var lastP=-1, ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var r=el.sec.getBoundingClientRect();
+      var total=el.sec.offsetHeight-window.innerHeight;
+      var p=total>0?Math.max(0,Math.min(1,-r.top/total)):0;
+      if(Math.abs(p-lastP)<0.0006) return;
+      lastP=p; paint(p);
+    });
+  }
+  function paint(p){
+    var b=cur(), ms=milestones();
+    /* 光轨进度 */
+    el.glow.setAttribute('stroke-dashoffset', (len*(1-p)).toFixed(1));
+    el.pfill.style.width=(p*100).toFixed(1)+"%";
+    el.pct.textContent=Math.round(p*100)+"%";
+    /* 车辆：位置贴光轨，朝向取切线 */
+    var pt=pathDim.getPointAtLength(len*p);
+    var pt2=pathDim.getPointAtLength(Math.min(len,len*p+6));
+    var ang=Math.atan2(pt2.y-pt.y, pt2.x-pt.x)*180/Math.PI;
+    if(!isFinite(ang)) ang=0;
+    el.veh.setAttribute('transform','translate('+pt.x.toFixed(1)+','+pt.y.toFixed(1)+')');
+    el.vehIn.setAttribute('transform','rotate('+ang.toFixed(1)+')');
+    /* 电流 */
+    flowDots.forEach(function(c,i){
+      var t=((performance.now()/4200*(0.4+p*0.9))+i/flowDots.length)%1;
+      var q=pathDim.getPointAtLength(len*t);
+      c.setAttribute('cx',q.x.toFixed(1)); c.setAttribute('cy',q.y.toFixed(1));
+      c.setAttribute('opacity',(0.18+p*0.5).toFixed(2));
+    });
+    /* 节点：走过即点亮，且保留；当前所在的那个高亮 */
+    var actIdx=-1;
+    ms.forEach(function(m,i){
+      var reached = p >= fracOf(i,ms.length)-0.02;
+      if(reached) actIdx=i;
+      var g=el.nodes.querySelector('[data-dot="'+m.id+'"]');
+      if(g) g.setAttribute('opacity',reached?'1':'0');
+      var nd=el.layer.querySelector('[data-node="'+m.id+'"]');
+      if(nd){ nd.classList.toggle("on",reached); }
+    });
+    ms.forEach(function(m,i){
+      var nd=el.layer.querySelector('[data-node="'+m.id+'"]');
+      if(nd) nd.classList.toggle("act", i===actIdx);
+    });
+    el.nodeN.textContent=(actIdx<0?0:actIdx+1)+" / "+ms.length;
+    el.tip.textContent = actIdx<0 ? "↓ 向下滚动，让电流走完这条线"
+      : ("正在经过 · "+ms[actIdx].title);
+  }
+
+  /* ---------- 分支切换 ---------- */
+  el.branch.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    S.branch=b.dataset.b;
+    if(S.branch==="infinity"){ S.egg=true; } else { S.egg=false; }
+    try{ localStorage.setItem('emg.branch',S.branch); }catch(e2){}
+    renderRail(); lastP=-1; onScroll();
+    root.style.setProperty('--accent',cur().accent);
+  });
+
+  /* ---------- Konami 彩蛋 ---------- */
+  var seq=[],KONAMI=["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  function eggToast(){
+    el.egg.innerHTML='<div class="e1">电流 ∞ · 隐藏路线已解锁</div>'+
+      '<div class="e2">KONAMI CODE ACCEPTED · 全 6 个技术节点已展开</div>';
+    el.egg.classList.add('on'); el.egg.setAttribute('aria-hidden','false');
+    setTimeout(function(){el.egg.classList.remove('on');el.egg.setAttribute('aria-hidden','true')},5200);
+  }
+  document.addEventListener('keydown',function(e){
+    var k=e.key.length===1?e.key.toLowerCase():e.key;
+    seq.push(k); if(seq.length>KONAMI.length) seq.shift();
+    if(seq.join(",")===KONAMI.join(",")){
+      seq=[];
+      if(!S.egg){ S.egg=true; S.branch="infinity"; renderRail(); lastP=-1; onScroll(); eggToast();
+        try{ localStorage.setItem('emg.branch',"infinity"); }catch(e2){} }
+      else eggToast();
+    }
+  });
+  $('#btnHint').addEventListener('click',function(){
+    el.egg.innerHTML='<div class="e1">↑↑↓↓←→←→BA</div><div class="e2">在键盘上敲出来，看看会发生什么</div>';
+    el.egg.classList.add('on'); el.egg.setAttribute('aria-hidden','false');
+    setTimeout(function(){el.egg.classList.remove('on');el.egg.setAttribute('aria-hidden','true')},4200);
+  });
+
+  /* ---------- 启动 ---------- */
+  function relayout(){ vertical=MQ.matches; renderRail(); lastP=-1; onScroll(); }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',function(){ if(MQ.matches!==vertical) relayout(); else { lastP=-1; onScroll(); } });
+  (function init(){
+    try{ var sb=localStorage.getItem('emg.branch'); if(sb && (BRANCHES[sb]||sb==="infinity")){ S.branch=sb; if(sb==="infinity")S.egg=true; } }catch(e){}
+    vertical=MQ.matches;
+    renderRail(); onScroll();
+    if(!RM){(function loop(){ paint(lastP<0?0:lastP); requestAnimationFrame(loop); })();}
+    else paint(1);
+  })();
+})();
+</script>
+</body>
+</html>

@@ -5,7 +5,7 @@
 
 一个非官方粉丝向的九号电动（Segway-Ninebot）系列与车型介绍站。核心想法：**把「浏览产品」做成一次充能启动仪式**——能量环充满，光裂开，车从里面驶出来。
 
-![status](https://img.shields.io/badge/status-WIP-C6FF00) ![deps](https://img.shields.io/badge/dependencies-none-00E5FF) ![static](https://img.shields.io/badge/static-HTML%20%2F%20CSS%20%2F%20JS-FF6B00)
+![status](https://img.shields.io/badge/status-all%205%20pages%20live-C6FF00) ![deps](https://img.shields.io/badge/dependencies-none-00E5FF) ![static](https://img.shields.io/badge/static-HTML%20%2F%20CSS%20%2F%20JS-FF6B00)
 
 ---
 
@@ -24,13 +24,17 @@ GitHub Pages：<https://cheng12443.github.io/e-motion-galaxy/>
 | R2 | `01-hero.html` | 首页 Hero：电流环充能启动、车辆驶出、HUD 数字滚动、指针视差、日/夜氛围、Web Audio 合成音（默认静音） | 已完成 |
 | R3 | `02-galaxy.html` | 系列星系：Canvas 透视投影的 3 颗行星，拖拽旋转 / 滚轮缩放 / 点击镜头推进 + 电流环转场，集齐 3 个解锁「电流大师」 | 已完成 |
 | R4 | `03-model.html` | 车型详情：滚动触发爆炸拆解（电池 / 电机 / 制动 / 轮胎 / 智能系统）、编号徽章 + 引线标注、右侧 HUD 随滚动更新、能量回收可视化、配色切换 / 轮毂旋转 / 大灯开关，`?id=` 可切 6 个车型 | 已完成 |
-| R5 | `04a-compare.html`<br>`04b-configurator.html`<br>`04c-timeline.html` | 车型对比（雷达图生长）、配置器（Canvas 生成配置卡片）、品牌技术时间轴（光轨 + 滚动分支） | 待生成 |
+| R5 | `04a-compare.html`<br>`04b-configurator.html`<br>`04c-timeline.html` | 骑行人格匹配（5 题 → 4 人格，纯前端规则引擎）+ 雷达图对比；配置器（Canvas 生成 1080×1440 配置卡片，可下载）；品牌技术时间轴（城市 / 越野 / 长途三条光轨分支叙事 + Konami 彩蛋） | 已完成 |
 
 ## 交互速查
 
 - **首页**：滚轮 / 长按电流环 / `↑↓` / `空格` 为电流环充能；`Esc` 跳过启动仪式。
 - **星系**：拖拽旋转 · 滚轮（或双指捏合）缩放 · 悬停看系列轮廓 · 点击进入 · `←/→` 切换行星 · `Enter` 进入 · `Esc` 返回。
-- **全站**：右上角切换日/夜氛围（默认按本机时间自动判定）；`prefers-reduced-motion` 下动画全部关闭。
+- **拆解**：向下滚动逐层爆开；顶部切车型；右侧 HUD 同步；可切配色 / 轮毂旋转 / 大灯。
+- **对比**：先答 5 题拿人格，再选两台车看雷达图（差异最大的轴会高亮并标 Δ）。
+- **配置器**：四种选项实时预览 → Canvas 画一张 1080×1440 卡片 → 下载 PNG。
+- **时间轴**：选路线 → 向下滚动让车沿光轨走完 → 节点亮起。**⌨ `↑↑↓↓←→←→BA` 解锁隐藏路线「电流 ∞」**。
+- **全站**：深色底 + 三色强调（绿=能量 / 蓝=数据 / 橙=动能回收）；`prefers-reduced-motion` 下动画全部关闭；移动端自动降级。
 
 ## 目录结构
 
@@ -40,6 +44,9 @@ GitHub Pages：<https://cheng12443.github.io/e-motion-galaxy/>
 ├── 01-hero.html            首页 Hero
 ├── 02-galaxy.html          系列星系
 ├── 03-model.html           车型详情（爆炸拆解，?id=<modelId>）
+├── 04a-compare.html        骑行人格匹配 + 车型对比（?ids=a,b）
+├── 04b-configurator.html   配置器 + Canvas 配置卡片（?id=<modelId>）
+├── 04c-timeline.html       品牌技术时间轴（分支叙事 + Konami 彩蛋）
 ├── data/
 │   ├── series.json         3 个系列
 │   ├── models.json         6 个车型
