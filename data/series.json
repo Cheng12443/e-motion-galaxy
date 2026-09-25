@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "file": "series",
+    "dataMode": "placeholder",
+    "note": "占位数据，可替换为官方数据。所有数值仅为示例，不得当作官方参数引用。",
+    "updated": "2026-09-26"
+  },
+  "series": [
+    {
+      "id": "city-flow",
+      "name": "城市流动系列",
+      "code": "CITY FLOW",
+      "slogan": "把通勤变成一段顺滑的电流",
+      "description": "面向城市日常通勤的轻量车型族。强调轻、快、好停、好解锁，主打智能解锁与能量回收带来的“无感通勤”。",
+      "positioning": "通勤 / 城市穿梭",
+      "color": "#C6FF00",
+      "orbitColor": "#C6FF00",
+      "planetRadius": 1.0,
+      "models": ["nova-c1", "nova-c2"],
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "voltage-pro",
+      "name": "高压性能系列",
+      "code": "VOLTAGE PRO",
+      "slogan": "电压越界的地方，才有速度",
+      "description": "面向性能用户的中大功率车型族。以自研三电（电机 / 锂电池 + BMS / FOC 电控）与主动安全（TCS / ABS / EABS）为核心叙事。",
+      "positioning": "性能 / 长距离电摩",
+      "color": "#00E5FF",
+      "orbitColor": "#00E5FF",
+      "planetRadius": 1.18,
+      "models": ["volt-p1", "volt-p2"],
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "terra-x",
+      "name": "全地形探索系列",
+      "code": "TERRA X",
+      "slogan": "路断了，电流不会断",
+      "description": "面向非铺装路面与城郊探索的车型族。强调悬挂行程、轮胎抓地、低扭输出与轻量化车架。",
+      "positioning": "越野 / 城郊探索",
+      "color": "#FF6B00",
+      "orbitColor": "#FF6B00",
+      "planetRadius": 0.92,
+      "models": ["terra-x1", "terra-x2"],
+      "dataMode": "placeholder"
+    }
+  ]
+}

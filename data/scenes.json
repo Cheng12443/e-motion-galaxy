@@ -1,0 +1,85 @@
+{
+  "_meta": {
+    "file": "scenes",
+    "dataMode": "placeholder",
+    "note": "占位数据，可替换为官方数据。环境参数用于页面氛围渲染，不代表任何官方测试条件。",
+    "updated": "2026-09-26"
+  },
+  "scenes": [
+    {
+      "id": "commute",
+      "name": "通勤",
+      "code": "COMMUTE",
+      "timeOfDay": "auto",
+      "accent": "#C6FF00",
+      "sky": ["#050505", "#0A1014"],
+      "road": "asphalt-clean",
+      "roadReflect": 0.35,
+      "headlight": 0.25,
+      "particles": "sparse",
+      "recommend": ["nova-c2", "nova-c1"],
+      "reason": "走走停停的短途，智能解锁与能量回收的收益最直观。",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "night",
+      "name": "夜骑",
+      "code": "NIGHT RIDE",
+      "timeOfDay": "night",
+      "accent": "#00E5FF",
+      "sky": ["#03040A", "#0A1230"],
+      "road": "wet-asphalt",
+      "roadReflect": 0.85,
+      "headlight": 1.0,
+      "particles": "neon-dust",
+      "recommend": ["volt-p1", "nova-c2"],
+      "reason": "夜间视野与制动信心优先，灯光语言与牵引力控制是这场景的主角。",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "long",
+      "name": "长途",
+      "code": "LONG HAUL",
+      "timeOfDay": "day",
+      "accent": "#FF6B00",
+      "sky": ["#050505", "#141008"],
+      "road": "highway",
+      "roadReflect": 0.2,
+      "headlight": 0.1,
+      "particles": "wind-streak",
+      "recommend": ["volt-p2", "volt-p1"],
+      "reason": "大容量锂电配合能量回收，把“每一度电能跑多远”变成可感知的体验。",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "trail",
+      "name": "越野",
+      "code": "TRAIL",
+      "timeOfDay": "day",
+      "accent": "#FF6B00",
+      "sky": ["#070604", "#1A1408"],
+      "road": "gravel",
+      "roadReflect": 0.05,
+      "headlight": 0.15,
+      "particles": "dust",
+      "recommend": ["terra-x2", "terra-x1"],
+      "reason": "离地间隙、胎面抓地与低扭输出决定你在砂石上的从容程度。",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "city",
+      "name": "城市穿梭",
+      "code": "CITY FLOW",
+      "timeOfDay": "auto",
+      "accent": "#C6FF00",
+      "sky": ["#050505", "#0B1118"],
+      "road": "asphalt-wet",
+      "roadReflect": 0.6,
+      "headlight": 0.5,
+      "particles": "light-trail",
+      "recommend": ["nova-c2", "volt-p1"],
+      "reason": "中速高频起停的城市场景，灵活性与制动响应比极速更重要。",
+      "dataMode": "placeholder"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "_meta": {
+    "file": "personalities",
+    "dataMode": "placeholder",
+    "note": "占位数据，可替换为官方数据。骑行人格为本站自创玩法，非官方分类。",
+    "updated": "2026-09-26"
+  },
+  "questions": [
+    { "id": "q1", "text": "单程通勤距离大约多少？", "options": [
+      { "id": "q1a", "label": "3 km 以内", "tag": "short" },
+      { "id": "q1b", "label": "3–10 km", "tag": "mid" },
+      { "id": "q1c", "label": "10 km 以上", "tag": "long" }
+    ] },
+    { "id": "q2", "text": "你常走的路况是？", "options": [
+      { "id": "q2a", "label": "平整城市道路", "tag": "smooth" },
+      { "id": "q2b", "label": "坑洼 / 修补路面", "tag": "rough" },
+      { "id": "q2c", "label": "城郊土路 / 非铺装", "tag": "offroad" }
+    ] },
+    { "id": "q3", "text": "骑行风格偏好？", "options": [
+      { "id": "q3a", "label": "平稳省心", "tag": "calm" },
+      { "id": "q3b", "label": "轻快灵活", "tag": "agile" },
+      { "id": "q3c", "label": "要速度与推背感", "tag": "fast" }
+    ] },
+    { "id": "q4", "text": "预算区间？", "options": [
+      { "id": "q4a", "label": "入门", "tag": "low" },
+      { "id": "q4b", "label": "中端", "tag": "mid" },
+      { "id": "q4c", "label": "高端 / 旗舰", "tag": "high" }
+    ] },
+    { "id": "q5", "text": "你最在意的一点？", "options": [
+      { "id": "q5a", "label": "续航", "tag": "range" },
+      { "id": "q5b", "label": "智能体验", "tag": "smart" },
+      { "id": "q5c", "label": "外观与夜骑氛围", "tag": "style" },
+      { "id": "q5d", "label": "安全与制动", "tag": "safety" }
+    ] }
+  ],
+  "personalities": [
+    {
+      "id": "commuter-ace",
+      "label": "通勤秩序者",
+      "code": "ORDERLY COMMUTER",
+      "description": "你追求的是「到达时不狼狈」。路线固定、节奏稳定，最在意的是解锁快、起步顺、别出意外。",
+      "tags": ["平稳", "省心", "零摩擦"],
+      "matchRules": { "distance": "short|mid", "road": "smooth|rough", "style": "calm|agile", "priority": "smart|range" },
+      "recommendedSeries": ["city-flow"],
+      "recommendedModels": ["nova-c2", "nova-c1"],
+      "reason": "轻量化车身 + 感应解锁与能量回收，最适合高频短途、走走停停的城市节奏。",
+      "color": "#C6FF00",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "night-rider",
+      "label": "夜行视觉系",
+      "code": "NIGHT RIDER",
+      "description": "你的骑行有一半是为了那段路的光。夜间视野、灯光语言、整车姿态，比参数表更能说服你。",
+      "tags": ["夜骑", "氛围", "姿态"],
+      "matchRules": { "road": "smooth|rough", "style": "agile|fast", "priority": "style|safety" },
+      "recommendedSeries": ["voltage-pro", "city-flow"],
+      "recommendedModels": ["volt-p1", "nova-c2"],
+      "reason": "灯光与仪表语言更完整、底盘更稳，夜间中速巡航的信心主要来自制动与牵引力控制。",
+      "color": "#00E5FF",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "range-marathon",
+      "label": "长途耐力派",
+      "code": "RANGE MARATHON",
+      "description": "你把电量当成里程焦虑的解药。单次充电能推多远、能量回收能省多少，是你真正关心的数字。",
+      "tags": ["续航", "效率", "数据"],
+      "matchRules": { "distance": "long", "style": "calm|fast", "priority": "range|smart" },
+      "recommendedSeries": ["voltage-pro"],
+      "recommendedModels": ["volt-p2", "volt-p1"],
+      "reason": "大容量锂电 + BMS 低温与循环管理 + EABS 能量回收，是长途场景里更不容易“掉电”的组合。",
+      "color": "#FF6B00",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "trail-seeker",
+      "label": "探索野趣派",
+      "code": "TRAIL SEEKER",
+      "description": "铺装路的尽头才是你的起点。你接受颠簸，但要求抓地、低扭和悬挂行程给得起回应。",
+      "tags": ["非铺装", "低扭", "抓地"],
+      "matchRules": { "road": "offroad", "style": "agile|calm", "priority": "safety|range" },
+      "recommendedSeries": ["terra-x"],
+      "recommendedModels": ["terra-x2", "terra-x1"],
+      "reason": "更高离地、更宽胎面与 TCS 牵引力控制，在湿滑与砂石路面上更容易把动力落到地面。",
+      "color": "#FF6B00",
+      "dataMode": "placeholder"
+    }
+  ]
+}

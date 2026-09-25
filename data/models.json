@@ -1,0 +1,148 @@
+{
+  "_meta": {
+    "file": "models",
+    "dataMode": "placeholder",
+    "note": "占位数据，可替换为官方数据。price=null 表示未取得官方价，界面显示为「—」；demoPrice 仅用于配置器的数字滚动演示，界面必须同时显示「示例数据」角标。",
+    "updated": "2026-09-26"
+  },
+  "models": [
+    {
+      "id": "nova-c1",
+      "seriesId": "city-flow",
+      "name": "NOVA C1",
+      "subtitle": "轻量入门通勤",
+      "price": null,
+      "currency": "CNY",
+      "demoPrice": 3199,
+      "range": { "value": 60, "unit": "km", "verified": false },
+      "topSpeed": { "value": 25, "unit": "km/h", "verified": false },
+      "battery": { "type": "锂电池", "voltage": "48V", "capacity": "20Ah", "verified": false },
+      "motor": { "type": "直驱轮毂电机", "ratedPower": "400W", "peakPower": "—", "verified": false },
+      "brake": { "front": "鼓刹", "rear": "鼓刹", "assist": ["EABS 能量回收"], "verified": false },
+      "smartFeatures": ["RideyGo 感应解锁", "离车自动落锁", "App 远程控制", "整车 OTA", "定位防盗", "能量回收"],
+      "scenes": ["commute", "city"],
+      "images": { "hero": "/assets/placeholder/bike-c1.png", "silhouette": "/assets/placeholder/sil-c1.svg" },
+      "colors": [
+        { "id": "mist-white", "name": "雾白", "hex": "#EDEDED" },
+        { "id": "volt-lime", "name": "荧光绿", "hex": "#C6FF00" },
+        { "id": "graphite", "name": "石墨黑", "hex": "#1A1A1A" }
+      ],
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "nova-c2",
+      "seriesId": "city-flow",
+      "name": "NOVA C2",
+      "subtitle": "城市穿梭进阶",
+      "price": null,
+      "currency": "CNY",
+      "demoPrice": 4299,
+      "range": { "value": 95, "unit": "km", "verified": false },
+      "topSpeed": { "value": 45, "unit": "km/h", "verified": false },
+      "battery": { "type": "锂电池", "voltage": "60V", "capacity": "26Ah", "verified": false },
+      "motor": { "type": "直驱轮毂电机", "ratedPower": "1200W", "peakPower": "—", "verified": false },
+      "brake": { "front": "碟刹", "rear": "碟刹", "assist": ["EABS 能量回收", "TCS 牵引力控制"], "verified": false },
+      "smartFeatures": ["RideyGo 感应解锁", "离车自动落锁", "App 远程控制", "整车 OTA", "定速巡航", "定位防盗", "能量回收", "胎压提示"],
+      "scenes": ["commute", "city", "night"],
+      "images": { "hero": "/assets/placeholder/bike-c2.png", "silhouette": "/assets/placeholder/sil-c2.svg" },
+      "colors": [
+        { "id": "volt-lime", "name": "荧光绿", "hex": "#C6FF00" },
+        { "id": "electric-blue", "name": "电光蓝", "hex": "#00E5FF" },
+        { "id": "sand", "name": "沙岩灰", "hex": "#8A8A82" }
+      ],
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "volt-p1",
+      "seriesId": "voltage-pro",
+      "name": "VOLT P1",
+      "subtitle": "性能电摩入门",
+      "price": null,
+      "currency": "CNY",
+      "demoPrice": 6999,
+      "range": { "value": 110, "unit": "km", "verified": false },
+      "topSpeed": { "value": 80, "unit": "km/h", "verified": false },
+      "battery": { "type": "锂电池", "voltage": "72V", "capacity": "32Ah", "verified": false },
+      "motor": { "type": "直驱轮毂电机", "ratedPower": "3000W", "peakPower": "—", "verified": false },
+      "brake": { "front": "液压碟刹", "rear": "液压碟刹", "assist": ["EABS 能量回收", "TCS 牵引力控制"], "verified": false },
+      "smartFeatures": ["RideyGo 感应解锁", "整车 OTA", "FOC 矢量控制", "App 远程控制", "定速巡航", "定位防盗", "能量回收", "骑行数据回传"],
+      "scenes": ["city", "night", "long"],
+      "images": { "hero": "/assets/placeholder/bike-p1.png", "silhouette": "/assets/placeholder/sil-p1.svg" },
+      "colors": [
+        { "id": "electric-blue", "name": "电光蓝", "hex": "#00E5FF" },
+        { "id": "graphite", "name": "石墨黑", "hex": "#1A1A1A" },
+        { "id": "energy-orange", "name": "能量橙", "hex": "#FF6B00" }
+      ],
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "volt-p2",
+      "seriesId": "voltage-pro",
+      "name": "VOLT P2",
+      "subtitle": "性能旗舰",
+      "price": null,
+      "currency": "CNY",
+      "demoPrice": 12999,
+      "range": { "value": 160, "unit": "km", "verified": false },
+      "topSpeed": { "value": 120, "unit": "km/h", "verified": false },
+      "battery": { "type": "锂电池", "voltage": "高压平台", "capacity": "—", "verified": false },
+      "motor": { "type": "直驱轮毂电机", "ratedPower": "—", "peakPower": "—", "verified": false },
+      "brake": { "front": "液压碟刹 + ABS", "rear": "液压碟刹", "assist": ["EABS 能量回收", "TCS 牵引力控制", "ABS 防抱死"], "verified": false },
+      "smartFeatures": ["RideyGo 感应解锁", "整车 OTA", "FOC 矢量控制", "TCS 牵引力控制", "ABS 防抱死", "App 远程控制", "定位防盗", "能量回收", "骑行数据回传"],
+      "scenes": ["night", "long", "city"],
+      "images": { "hero": "/assets/placeholder/bike-p2.png", "silhouette": "/assets/placeholder/sil-p2.svg" },
+      "colors": [
+        { "id": "energy-orange", "name": "能量橙", "hex": "#FF6B00" },
+        { "id": "graphite", "name": "石墨黑", "hex": "#1A1A1A" },
+        { "id": "volt-lime", "name": "荧光绿", "hex": "#C6FF00" }
+      ],
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "terra-x1",
+      "seriesId": "terra-x",
+      "name": "TERRA X1",
+      "subtitle": "城郊探索",
+      "price": null,
+      "currency": "CNY",
+      "demoPrice": 5299,
+      "range": { "value": 70, "unit": "km", "verified": false },
+      "topSpeed": { "value": 25, "unit": "km/h", "verified": false },
+      "battery": { "type": "锂电池", "voltage": "48V", "capacity": "24Ah", "verified": false },
+      "motor": { "type": "直驱轮毂电机", "ratedPower": "600W", "peakPower": "—", "verified": false },
+      "brake": { "front": "碟刹", "rear": "碟刹", "assist": ["EABS 能量回收"] , "verified": false },
+      "smartFeatures": ["RideyGo 感应解锁", "整车 OTA", "App 远程控制", "定位防盗", "能量回收"],
+      "scenes": ["trail", "city"],
+      "images": { "hero": "/assets/placeholder/bike-x1.png", "silhouette": "/assets/placeholder/sil-x1.svg" },
+      "colors": [
+        { "id": "trail-olive", "name": "旷野橄榄", "hex": "#6B7A4A" },
+        { "id": "graphite", "name": "石墨黑", "hex": "#1A1A1A" },
+        { "id": "energy-orange", "name": "能量橙", "hex": "#FF6B00" }
+      ],
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "terra-x2",
+      "seriesId": "terra-x",
+      "name": "TERRA X2",
+      "subtitle": "全地形进阶",
+      "price": null,
+      "currency": "CNY",
+      "demoPrice": 7999,
+      "range": { "value": 110, "unit": "km", "verified": false },
+      "topSpeed": { "value": 60, "unit": "km/h", "verified": false },
+      "battery": { "type": "锂电池", "voltage": "60V", "capacity": "32Ah", "verified": false },
+      "motor": { "type": "直驱轮毂电机", "ratedPower": "2000W", "peakPower": "—", "verified": false },
+      "brake": { "front": "液压碟刹", "rear": "液压碟刹", "assist": ["EABS 能量回收", "TCS 牵引力控制"], "verified": false },
+      "smartFeatures": ["RideyGo 感应解锁", "整车 OTA", "FOC 矢量控制", "TCS 牵引力控制", "App 远程控制", "定位防盗", "能量回收", "胎压提示"],
+      "scenes": ["trail", "long", "night"],
+      "images": { "hero": "/assets/placeholder/bike-x2.png", "silhouette": "/assets/placeholder/sil-x2.svg" },
+      "colors": [
+        { "id": "energy-orange", "name": "能量橙", "hex": "#FF6B00" },
+        { "id": "trail-olive", "name": "旷野橄榄", "hex": "#6B7A4A" },
+        { "id": "dark-teal", "name": "深青", "hex": "#00555E" }
+      ],
+      "dataMode": "placeholder"
+    }
+  ]
+}

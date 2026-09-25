@@ -1,0 +1,12 @@
+# 临时 / 中间产物
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
+__pycache__/
+*.pyc
+
+# 本地校验的中间文件
+project/notes/_*.js
+project/notes/_*.txt

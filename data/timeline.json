@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "file": "timeline",
+    "dataMode": "placeholder",
+    "note": "占位数据，可替换为官方数据。year 为 null 表示年份未核实，界面显示“20XX · 待核”；条目内容为公开技术名词的整理（三电 / RideyGo / OTA / TCS·ABS·EABS / 车规级验证），不代表官方发布顺序。",
+    "updated": "2026-09-26"
+  },
+  "milestones": [
+    {
+      "id": "voltage-core",
+      "era": "电流 1.0",
+      "year": null,
+      "title": "三电自成一体",
+      "layer": "三电系统",
+      "summary": "自研直驱轮毂电机 + 锂电池与 BMS 充放电管理 + FOC 矢量控制电控，把效率、平顺与能量回收交给同一套算法。",
+      "keywords": ["直驱轮毂电机", "BMS", "FOC 矢量控制"],
+      "branch": "all",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "software-defined",
+      "era": "电流 2.0",
+      "year": null,
+      "title": "软件定义硬件",
+      "layer": "智能系统",
+      "summary": "RideyGo 把“钥匙”这个概念移除：感应解锁、离车自动落锁、App 远程控制；整车 OTA 让电控、电池、仪表的底层固件可以在线更新。",
+      "keywords": ["RideyGo", "整车 OTA", "数据闭环"],
+      "branch": "city",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "active-safety",
+      "era": "电流 3.0",
+      "year": null,
+      "title": "主动安全下放",
+      "layer": "主动安全",
+      "summary": "TCS 牵引力控制在湿滑起步与过弯时抑制后轮打滑，ABS 防止紧急制动抱死，EABS 在刹车同时把动能回收进电池。",
+      "keywords": ["TCS", "ABS", "EABS 能量回收"],
+      "branch": "night",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "range-engineering",
+      "era": "电流 3.5",
+      "year": null,
+      "title": "把续航当成工程问题",
+      "layer": "电池与能量",
+      "summary": "低温管理、循环寿命控制与能量回收策略共同决定“每一度电能跑多远”，而不是单看容量数字。",
+      "keywords": ["低温管理", "循环寿命", "能量回收策略"],
+      "branch": "long",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "chassis-craft",
+      "era": "电流 4.0",
+      "year": null,
+      "title": "车规级耐久",
+      "layer": "底盘与制造",
+      "summary": "碳素钢车架、前后碟刹、液压减震是基本盘；淋雨、振动、盐雾按车规级做耐久验证，才是较劲的地方。",
+      "keywords": ["碳素钢车架", "液压减震", "车规级验证"],
+      "branch": "trail",
+      "dataMode": "placeholder"
+    },
+    {
+      "id": "system-evolution",
+      "era": "电流 ∞",
+      "year": null,
+      "title": "还在持续进化的系统",
+      "layer": "体系",
+      "summary": "护城河不在某一项配置，而在三电自研、软件定义硬件、主动安全三层能力叠加之后的持续迭代。",
+      "keywords": ["三层能力", "持续迭代"],
+      "branch": "all",
+      "dataMode": "placeholder"
+    }
+  ]
+}

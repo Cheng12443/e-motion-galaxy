@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="is-night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>系列星系 · E-MOTION GALAXY｜九号电动系列介绍（非官方）</title>
+<meta name="description" content="拖拽旋转、滚轮缩放的九号电动系列星系：城市流动 / 高压性能 / 全地形探索。非官方粉丝网站。">
+<style>
+:root{
+  --bg-void:#050505; --bg-deep:#0A0A0A; --bg-panel:#0E1013;
+  --line-hair:rgba(255,255,255,.08); --line-soft:rgba(255,255,255,.16);
+  --txt-hi:#F2F5F7; --txt-mid:#98A2AE; --txt-lo:#5A636E;
+  --volt:#C6FF00; --arc:#00E5FF; --heat:#FF6B00;
+  --accent:var(--volt); --accent-dim:rgba(198,255,0,.16);
+  --glass-bg:rgba(255,255,255,.04); --glass-brd:rgba(255,255,255,.10); --glass-blur:14px;
+  --font-display:"Orbitron","Space Grotesk","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+  --font-ui:"Space Grotesk","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+  --font-mono:ui-monospace,"SFMono-Regular","JetBrains Mono",monospace;
+  --fs-body:clamp(.95rem,1.05vw,1.05rem); --fs-cap:.78rem; --fs-hud:clamp(1.4rem,3vw,2.2rem);
+  --page-x:clamp(20px,5vw,88px); --maxw:1440px;
+  --r-sm:8px; --r-md:14px; --r-lg:22px; --r-pill:999px;
+  --dur-1:120ms; --dur-2:240ms; --dur-3:420ms; --dur-4:720ms; --dur-5:1100ms;
+  --ease-out:cubic-bezier(.22,.61,.36,1); --ease-inout:cubic-bezier(.65,.05,.36,1);
+  --ease-spring:cubic-bezier(.34,1.36,.44,1); --ease-current:cubic-bezier(.16,.84,.44,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg-void);color:var(--txt-hi);font-family:var(--font-ui);font-size:var(--fs-body);
+  line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body.lock{overflow:hidden}
+::selection{background:var(--accent);color:#04060a}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.caps{font-family:var(--font-display);text-transform:uppercase;letter-spacing:.18em}
+.num{font-family:var(--font-display);font-variant-numeric:tabular-nums}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:60;mix-blend-mode:overlay;opacity:.45;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px)}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(120% 85% at 50% 45%,transparent 42%,rgba(0,0,0,.78) 100%)}
+
+/* nav */
+.hudbar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:14px var(--page-x);font-size:var(--fs-cap);text-transform:uppercase;letter-spacing:.16em;
+  background:linear-gradient(180deg,rgba(5,5,5,.9),rgba(5,5,5,0))}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display)}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);
+  animation:pulse 2.2s var(--ease-inout) infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.hudbar .mid{display:flex;gap:18px;color:var(--txt-mid);flex-wrap:wrap}
+.hudbar .mid a:hover,.hudbar .mid a[aria-current="page"]{color:var(--accent)}
+.chip{border:1px solid var(--line-soft);border-radius:var(--r-pill);padding:6px 12px;color:var(--txt-mid);
+  letter-spacing:.12em;transition:all var(--dur-2) var(--ease-out)}
+.chip:hover,.chip[aria-pressed="true"]{color:#04060a;background:var(--accent);border-color:var(--accent)}
+
+/* 舞台 */
+#galaxy{position:relative;min-height:100svh;overflow:hidden}
+.stage{position:absolute;inset:0;z-index:1}
+#stars{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#stars.grabbing{cursor:grabbing}
+.planets{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .55s var(--ease-out)}
+.planets.ready{opacity:1}
+.hit{position:absolute;left:0;top:0;width:132px;height:132px;border-radius:50%;pointer-events:auto;
+  border:1px solid transparent;background:transparent;will-change:transform;
+  transition:border-color var(--dur-3) var(--ease-out),background var(--dur-3)}
+.hit::after{content:"";position:absolute;inset:-9%;border-radius:50%;
+  border:1px dashed transparent;transition:border-color var(--dur-3),transform var(--dur-4) var(--ease-out)}
+.hit:hover::after,.hit:focus-visible::after{border-color:var(--pc,var(--accent));animation:orbit 12s linear infinite}
+@keyframes orbit{to{transform:rotate(360deg)}}
+.hit:focus-visible{outline:2px solid var(--pc,var(--accent));outline-offset:6px}
+.chip-lb{position:absolute;left:0;top:0;pointer-events:none;white-space:nowrap;
+  font-size:var(--fs-cap);letter-spacing:.14em;padding:3px 10px;border-radius:var(--r-pill);
+  border:1px solid var(--line-soft);background:rgba(8,10,13,.72);color:var(--txt-hi);
+  backdrop-filter:blur(6px);will-change:transform;transition:opacity var(--dur-3),color var(--dur-2)}
+.chip-lb b{color:var(--pc,var(--accent));font-family:var(--font-display);letter-spacing:.1em;
+  font-size:.9em;margin-right:6px}
+
+/* 标题 / 提示 / 进度 */
+.headline{position:absolute;z-index:5;left:var(--page-x);top:clamp(84px,15vh,150px);max-width:34ch;pointer-events:none}
+.headline .kicker{color:var(--accent);font-size:var(--fs-cap);letter-spacing:.3em;font-family:var(--font-display)}
+.headline h1{font-family:var(--font-display);font-size:clamp(1.9rem,4.4vw,3.4rem);line-height:1.05;margin:.24em 0 .1em}
+.headline p{color:var(--txt-mid);margin:0;font-size:.92rem}
+.hintbar{position:absolute;z-index:5;left:50%;bottom:22px;transform:translateX(-50%);
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:8px 14px;border-radius:var(--r-pill);
+  border:1px solid var(--line-hair);background:rgba(8,10,13,.6);backdrop-filter:blur(8px);
+  color:var(--txt-lo);font-size:var(--fs-cap);letter-spacing:.1em;pointer-events:none;max-width:94vw;text-align:center}
+.hintbar span{white-space:nowrap}
+
+/* 成就环 */
+.progress-ring{position:absolute;z-index:6;right:var(--page-x);bottom:clamp(22px,6vh,60px);display:flex;
+  align-items:center;gap:12px;padding:10px 14px;border-radius:var(--r-md);border:1px solid var(--line-hair);
+  background:var(--glass-bg);backdrop-filter:blur(var(--glass-blur))}
+.progress-ring svg{width:52px;height:52px;flex:0 0 auto}
+.progress-ring .txt{font-size:var(--fs-cap);letter-spacing:.1em;color:var(--txt-mid);line-height:1.4}
+.progress-ring .txt b{display:block;color:var(--txt-hi);font-family:var(--font-display);letter-spacing:.14em}
+.progress-ring b.done{color:var(--accent);text-shadow:0 0 18px var(--accent-dim)}
+
+/* 侧栏控制 */
+.side{position:absolute;z-index:6;right:var(--page-x);top:50%;transform:translateY(-50%);display:flex;
+  flex-direction:column;gap:10px}
+.side button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line-soft);background:var(--glass-bg);
+  backdrop-filter:blur(8px);color:var(--txt-mid);display:grid;place-items:center;font-size:15px;
+  transition:all var(--dur-2) var(--ease-out)}
+.side button:hover{color:#04060a;background:var(--accent);border-color:var(--accent);transform:scale(1.06)}
+.side .zoomv{font-size:10px;color:var(--txt-lo);text-align:center;font-family:var(--font-mono)}
+
+/* tooltip 卡片 */
+.tip{position:absolute;z-index:8;left:0;top:0;width:min(300px,76vw);padding:14px 16px;border-radius:var(--r-md);
+  border:1px solid var(--line-soft);background:rgba(10,12,15,.86);backdrop-filter:blur(14px);
+  box-shadow:0 24px 70px rgba(0,0,0,.7);opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity var(--dur-3) var(--ease-out),visibility var(--dur-3);will-change:transform}
+.tip.on{opacity:1;visibility:visible}
+.tip::before{content:"";position:absolute;top:0;left:14px;right:14px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--pc,var(--accent)),transparent)}
+.tip .code{font-size:10px;letter-spacing:.24em;color:var(--pc,var(--accent));font-family:var(--font-display)}
+.tip h3{margin:6px 0 4px;font-size:1.12rem}
+.tip .slogan{margin:0 0 10px;color:var(--txt-mid);font-size:.86rem}
+.tip .meta{display:flex;flex-direction:column;gap:5px;border-top:1px dashed rgba(255,255,255,.09);padding-top:9px}
+.tip .meta div{display:flex;justify-content:space-between;gap:10px;font-size:.8rem}
+.tip .meta .k{color:var(--txt-lo);letter-spacing:.06em}
+.tip .meta .v{color:var(--txt-hi)}
+.tip .go{margin-top:10px;font-size:var(--fs-cap);letter-spacing:.12em;color:var(--pc,var(--accent))}
+
+/* 系列详情面板 */
+.detail{position:fixed;inset:0;z-index:50;display:flex;justify-content:flex-end;pointer-events:none}
+.detail .scrim{position:absolute;inset:0;background:rgba(3,4,6,.72);backdrop-filter:blur(6px);
+  opacity:0;transition:opacity var(--dur-4) var(--ease-out)}
+.panel{position:relative;width:min(560px,100%);height:100%;overflow-y:auto;padding:clamp(28px,5vh,56px) clamp(20px,4vw,40px);
+  background:linear-gradient(180deg,#0B0E12,#07090C);border-left:1px solid var(--line-soft);
+  transform:translateX(102%);transition:transform var(--dur-4) var(--ease-out);
+  box-shadow:-30px 0 90px rgba(0,0,0,.7)}
+.detail.on{pointer-events:auto}
+.detail.on .scrim{opacity:1}
+.detail.on .panel{transform:translateX(0)}
+.panel .pcode{font-size:11px;letter-spacing:.3em;color:var(--pc,var(--accent));font-family:var(--font-display)}
+.panel h2{font-family:var(--font-display);font-size:clamp(1.6rem,3.4vw,2.3rem);margin:.2em 0 .1em;line-height:1.1}
+.panel .pslogan{color:var(--accent);font-size:.95rem;margin:0 0 14px}
+.panel .pdesc{color:var(--txt-mid);margin:0 0 22px}
+.panel .prow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.tag{border:1px solid var(--line-hair);border-radius:var(--r-pill);padding:4px 11px;font-size:var(--fs-cap);color:var(--txt-mid)}
+.mcards{display:grid;gap:14px}
+.mcard{position:relative;padding:16px 16px 14px;border-radius:var(--r-md);border:1px solid var(--line-hair);
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));overflow:hidden;
+  transition:border-color var(--dur-3),transform var(--dur-3) var(--ease-out)}
+.mcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--pc,var(--accent));opacity:.7}
+.mcard:hover{border-color:var(--pc,var(--accent));transform:translateY(-2px)}
+.mcard .mh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.mcard h4{margin:0;font-size:1.05rem;font-family:var(--font-display);letter-spacing:.04em}
+.mcard .sub{color:var(--txt-lo);font-size:var(--fs-cap);letter-spacing:.06em}
+.sil{height:64px;margin:10px 0 6px;border-radius:var(--r-sm);
+  background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.01));
+  border:1px dashed var(--line-hair);display:grid;place-items:center;color:var(--txt-lo);font-size:10px;letter-spacing:.16em}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 0 10px}
+.mg{background:rgba(255,255,255,.03);border-radius:var(--r-sm);padding:8px 10px}
+.mg .k{font-size:10px;letter-spacing:.12em;color:var(--txt-lo);text-transform:uppercase}
+.mg .v{font-size:1.06rem;font-family:var(--font-display);font-variant-numeric:tabular-nums}
+.mg .v small{font-size:.5em;color:var(--txt-mid);margin-left:2px}
+.sw{display:flex;gap:6px;margin-bottom:10px}
+.sw i{width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:block}
+.mfoot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.badge{display:inline-block;border:1px solid var(--line-soft);border-radius:var(--r-pill);padding:1px 7px;
+  font-size:10px;letter-spacing:.08em;color:var(--txt-lo)}
+.panel .back{margin-top:26px}
+.btn-mini{border:1px solid var(--line-soft);border-radius:var(--r-pill);padding:8px 16px;font-size:.82rem;
+  letter-spacing:.06em;transition:all var(--dur-2) var(--ease-out);display:inline-flex;gap:8px;align-items:center}
+.btn-mini:hover{border-color:var(--accent);color:var(--accent)}
+.btn-mini.go{background:var(--accent);color:#04060a;border-color:var(--accent);font-weight:700}
+
+/* 转场（电流环开合） */
+.wipe{position:fixed;inset:0;z-index:55;pointer-events:none;opacity:0;transition:opacity var(--dur-2)}
+.wipe.on{opacity:1}
+.wipe .ringc{position:absolute;left:50%;top:50%;width:62vmin;height:62vmin;margin:-31vmin 0 0 -31vmin;
+  border-radius:50%;border:2px solid var(--accent);opacity:0;box-shadow:0 0 60px var(--accent-dim)}
+.wipe.on .ringc{animation:ringout .9s var(--ease-current) forwards}
+@keyframes ringout{0%{transform:scale(.08);opacity:.95}70%{opacity:.45}100%{transform:scale(3.4);opacity:0}}
+.wipe .sweep{position:absolute;left:50%;top:50%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;
+  border-radius:50%;opacity:0;
+  background:conic-gradient(from 0deg,transparent 0deg,var(--accent-dim) 40deg,transparent 90deg)}
+.wipe.on .sweep{animation:sweep .9s var(--ease-current) forwards}
+@keyframes sweep{0%{opacity:0;transform:rotate(0)}35%{opacity:.9}100%{opacity:0;transform:rotate(220deg)}}
+
+/* toast */
+.toast{position:fixed;z-index:70;left:50%;top:74px;transform:translate(-50%,-16px);opacity:0;
+  padding:12px 20px;border-radius:var(--r-pill);border:1px solid var(--accent);
+  background:rgba(10,12,15,.9);backdrop-filter:blur(12px);box-shadow:0 0 40px var(--accent-dim);
+  display:flex;gap:12px;align-items:center;transition:opacity var(--dur-4),transform var(--dur-4) var(--ease-spring)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast .bdg{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--accent);
+  color:var(--accent);font-size:15px;box-shadow:0 0 22px var(--accent-dim)}
+.toast .t1{font-size:.9rem}
+.toast .t2{font-size:10px;letter-spacing:.16em;color:var(--txt-mid)}
+
+/* 页脚 */
+footer.site{position:relative;z-index:5;border-top:1px solid var(--line-hair);
+  padding:clamp(34px,6vh,64px) var(--page-x) calc(var(--page-x) + 30px);color:var(--txt-mid);font-size:.88rem;
+  background:linear-gradient(180deg,rgba(5,5,5,.6),#050505)}
+footer.site .fgrid{max-width:var(--maxw);margin:0 auto;display:grid;gap:18px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+footer.site p{margin:0 0 6px}
+footer.site strong{color:var(--txt-hi);font-weight:600}
+footer.site a.mail{color:var(--accent);border-bottom:1px solid var(--accent-dim)}
+footer.site .legal{margin:26px auto 0;max-width:var(--maxw);color:var(--txt-lo);font-size:.8rem;line-height:1.75}
+
+@media (max-width:900px){
+  .hudbar .mid{display:none}
+  .headline{top:clamp(76px,12vh,110px);max-width:min(92vw,30ch)}
+  .headline h1{font-size:clamp(1.7rem,7vw,2.4rem)}
+  .side{right:14px}
+  .progress-ring{right:auto;left:50%;transform:translateX(-50%);bottom:16px;padding:8px 12px}
+  .hintbar{bottom:88px}
+  .hit{width:104px;height:104px}
+  .panel{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .scan{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="vig" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<header class="hudbar">
+  <div class="brand"><span class="dot" aria-hidden="true"></span> E-MOTION GALAXY</div>
+  <nav class="mid" aria-label="站点小节">
+    <a href="01-hero.html">01 启动</a>
+    <a href="02-galaxy.html" aria-current="page">02 系列星系</a>
+    <a href="03-model.html">03 车型拆解</a>
+    <a href="04a-compare.html">04 对比</a>
+  </nav>
+  <div><button id="btnScene" class="chip" aria-pressed="false">☾ 夜间</button></div>
+</header>
+
+<main>
+<section id="galaxy" aria-labelledby="gTitle">
+  <div class="stage">
+    <canvas id="stars" aria-label="系列星系可视化（拖拽旋转、滚轮缩放）"></canvas>
+    <div class="planets" id="planetLayer"></div>
+    <div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+  </div>
+
+  <div class="headline">
+    <div class="kicker">SERIES GALAXY</div>
+    <h1 id="gTitle">三个系列，<br>三颗在转的星球</h1>
+    <p>拖拽旋转星系，滚轮缩放；悬停看轮廓，点击推进去看车型。</p>
+  </div>
+
+  <div class="side" aria-label="视角控制">
+    <button id="btnReset" title="重置视角" aria-label="重置视角">⟲</button>
+    <button id="btnIn" title="放大" aria-label="放大">+</button>
+    <button id="btnOut" title="缩小" aria-label="缩小">−</button>
+    <button id="btnDown" title="去看页脚" aria-label="向下前往页脚">↓</button>
+    <div class="zoomv"><span id="zoomv">100%</span></div>
+  </div>
+
+  <div class="progress-ring" aria-label="星系探索进度">
+    <svg viewBox="0 0 60 60" aria-hidden="true">
+      <circle cx="30" cy="30" r="25" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="3"/>
+      <circle id="pr" cx="30" cy="30" r="25" fill="none" stroke="var(--accent)" stroke-width="3"
+              stroke-linecap="round" transform="rotate(-90 30 30)" stroke-dasharray="157.1" stroke-dashoffset="157.1"/>
+    </svg>
+    <div class="txt"><b id="prTxt">0 / 3</b>已探索系列</div>
+  </div>
+
+  <div class="hintbar">
+    <span>拖拽 = 旋转</span><span>·</span><span>滚轮 = 缩放</span><span>·</span>
+    <span>点击星球 = 进入系列</span><span>·</span><span>⌨ ← → 切换 / Enter 进入 / Esc 返回</span>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="fgrid">
+    <div>
+      <p><strong>非官方粉丝网站，仅用于学习与展示。</strong></p>
+      <p>本站与 Segway-Ninebot 无任何隶属或合作关系，不销售任何产品。</p>
+    </div>
+    <div>
+      <p>辅助工具：DeepSeek</p>
+      <p>创作者：苏好好</p>
+      <p>邮箱：<a class="mail" href="mailto:3348304834@qq.com">3348304834@qq.com</a></p>
+    </div>
+    <div>
+      <p>数据来源说明</p>
+      <p style="color:var(--txt-lo);font-size:.82rem">系列与车型均为占位示例数据，用于演示交互结构，非官方参数；正式版将替换为可溯源的公开资料并逐项标注来源。</p>
+    </div>
+  </div>
+  <p class="legal">免责声明：本站所有图形（含星球、车体剪影、图标）均为原创几何示意，未使用任何未经授权的官方图片、商标或摄影素材。若权利人认为内容不妥，请通过上方邮箱联系，我们将立即调整或删除。</p>
+</footer>
+</main>
+
+<!-- 系列详情 -->
+<div class="detail" id="detail" aria-hidden="true">
+  <div class="scrim" id="scrim"></div>
+  <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="pTitle" tabindex="-1"></div>
+</div>
+
+<div class="wipe" id="wipe" aria-hidden="true"><div class="sweep"></div><div class="ringc"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-hidden="true"></div>
+<p class="sr" id="live" role="status" aria-live="polite"></p>
+
+<script>
+(function(){
+  "use strict";
+  /* ================= 数据（占位，可替换为官方数据） ================= */
+  var SERIES=[
+    {id:"city-flow",name:"城市流动系列",code:"CITY FLOW",slogan:"把通勤变成一段顺滑的电流",
+     description:"面向城市日常通勤的轻量车型族。强调轻、快、好停、好解锁，主打智能解锁与能量回收带来的“无感通勤”。",
+     positioning:"通勤 / 城市穿梭",color:"#C6FF00",size:1.0,models:["nova-c1","nova-c2"]},
+    {id:"voltage-pro",name:"高压性能系列",code:"VOLTAGE PRO",slogan:"电压越界的地方，才有速度",
+     description:"面向性能用户的中大功率车型族。以自研三电（电机 / 锂电池 + BMS / FOC 电控）与主动安全（TCS / ABS / EABS）为核心叙事。",
+     positioning:"性能 / 长距离电摩",color:"#00E5FF",size:1.18,models:["volt-p1","volt-p2"]},
+    {id:"terra-x",name:"全地形探索系列",code:"TERRA X",slogan:"路断了，电流不会断",
+     description:"面向非铺装路面与城郊探索的车型族。强调悬挂行程、轮胎抓地、低扭输出与轻量化车架。",
+     positioning:"越野 / 城郊探索",color:"#FF6B00",size:0.92,models:["terra-x1","terra-x2"]}
+  ];
+  var MODELS={
+    "nova-c1":{name:"NOVA C1",subtitle:"轻量入门通勤",range:60,speed:25,price:null,
+      colors:["#EDEDED","#C6FF00","#1A1A1A"],features:["RideyGo 感应解锁","整车 OTA","能量回收"]},
+    "nova-c2":{name:"NOVA C2",subtitle:"城市穿梭进阶",range:95,speed:45,price:null,
+      colors:["#C6FF00","#00E5FF","#8A8A82"],features:["RideyGo 感应解锁","整车 OTA","TCS 牵引力控制","能量回收"]},
+    "volt-p1":{name:"VOLT P1",subtitle:"性能电摩入门",range:110,speed:80,price:null,
+      colors:["#00E5FF","#1A1A1A","#FF6B00"],features:["FOC 矢量控制","整车 OTA","TCS 牵引力控制","能量回收"]},
+    "volt-p2":{name:"VOLT P2",subtitle:"性能旗舰",range:160,speed:120,price:null,
+      colors:["#FF6B00","#1A1A1A","#C6FF00"],features:["ABS 防抱死","TCS 牵引力控制","EABS 能量回收","整车 OTA"]},
+    "terra-x1":{name:"TERRA X1",subtitle:"城郊探索",range:70,speed:25,price:null,
+      colors:["#6B7A4A","#1A1A1A","#FF6B00"],features:["RideyGo 感应解锁","整车 OTA","能量回收"]},
+    "terra-x2":{name:"TERRA X2",subtitle:"全地形进阶",range:110,speed:60,price:null,
+      colors:["#FF6B00","#6B7A4A","#00555E"],features:["FOC 矢量控制","TCS 牵引力控制","整车 OTA","能量回收"]}
+  };
+  var DATA_NOTE="占位示例数据 · 可替换为官方数据";
+
+  var $=function(s){return document.querySelector(s)};
+  var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var MOBILE=window.matchMedia('(max-width:900px),(pointer:coarse)').matches;
+  var root=document.documentElement;
+  var live=$('#live');
+
+  /* ---------- 日 / 夜 ---------- */
+  function applyScene(night){
+    root.classList.toggle('is-night',night);
+    $('#btnScene').textContent=night?'☾ 夜间':'☀ 日间';
+    $('#btnScene').setAttribute('aria-pressed',String(!night));
+    try{localStorage.setItem('emg.night',night?'1':'0')}catch(e){}
+  }
+  var sn=null; try{sn=localStorage.getItem('emg.night')}catch(e){}
+  var h=new Date().getHours();
+  applyScene(sn===null?(h<6||h>=18):(sn==='1'));
+  $('#btnScene').addEventListener('click',function(){applyScene(!root.classList.contains('is-night'))});
+
+  /* ---------- 颜色工具 ---------- */
+  function hex2rgb(c){c=c.replace('#','');if(c.length===3)c=c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+    return [parseInt(c.substr(0,2),16),parseInt(c.substr(2,2),16),parseInt(c.substr(4,2),16)]}
+  function mix(c,t,a){var r=hex2rgb(c),b=hex2rgb(t);
+    return 'rgb('+Math.round(r[0]+(b[0]-r[0])*a)+','+Math.round(r[1]+(b[1]-r[1])*a)+','+Math.round(r[2]+(b[2]-r[2])*a)+')'}
+  function rgba(c,a){var r=hex2rgb(c);return 'rgba('+r[0]+','+r[1]+','+r[2]+','+a+')'}
+
+  /* ---------- Canvas / 相机 ---------- */
+  var cvs=$('#stars'), ctx=cvs.getContext('2d');
+  var W=0,H=0,dpr=1,FOCAL=1,CAMD=3.5;
+  var yaw=0.35, pitch=-0.30, camD=3.9;
+  var yawT=0.35, pitchT=-0.30, camDT=3.9;
+  var spin=0, paused=0, hover=-1, openIdx=-1;
+
+  var PLANET_K=0.30;   /* 世界半径 → 屏幕半径系数（含透视衰减） */
+  function resize(){
+    var r=cvs.getBoundingClientRect();
+    dpr=Math.min(2,window.devicePixelRatio||1);
+    W=r.width; H=r.height;
+    cvs.width=Math.round(W*dpr); cvs.height=Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    FOCAL=Math.min(W,H)*1.35;
+  }
+  window.addEventListener('resize',resize); resize();
+
+  var STARS=[];
+  (function(){ var n=MOBILE?150:260;
+    for(var i=0;i<n;i++){
+      var th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1), rr=2.4+Math.random()*7;
+      STARS.push({x:Math.sin(ph)*Math.cos(th)*rr,y:Math.cos(ph)*rr*0.6,z:Math.sin(ph)*Math.sin(th)*rr,
+        s:0.4+Math.random()*1.3,o:0.25+Math.random()*0.6,tw:Math.random()*6.28});
+    }
+  })();
+
+  function project(p){
+    var cy=Math.cos(yaw),sy=Math.sin(yaw);
+    var x=p.x*cy-p.z*sy, z=p.x*sy+p.z*cy;
+    var cp=Math.cos(pitch),sp=Math.sin(pitch);
+    var y=p.y*cp-z*sp, z2=p.y*sp+z*cp;
+    var d=Math.max(0.35,camD+z2);
+    var s=FOCAL/d;
+    return {x:W/2+x*s, y:H/2+y*s, s:s, d:z2};
+  }
+  function ang(i){ return (i/SERIES.length)*Math.PI*2 + spin; }
+  function pos(i){ var a=ang(i); return {x:Math.cos(a), y:0, z:Math.sin(a)}; }
+
+  function drawPlanet(cx,cy,r,col,glow){
+    // 光晕
+    var hg=ctx.createRadialGradient(cx,cy,r*0.85,cx,cy,r*(glow?3.1:2.4));
+    hg.addColorStop(0,rgba(col,0.26)); hg.addColorStop(1,rgba(col,0));
+    ctx.fillStyle=hg; ctx.beginPath(); ctx.arc(cx,cy,r*(glow?3.1:2.4),0,6.283); ctx.fill();
+    // 球体
+    var g=ctx.createRadialGradient(cx-r*0.34,cy-r*0.4,r*0.06,cx,cy,r);
+    g.addColorStop(0,mix(col,'#ffffff',0.72));
+    g.addColorStop(0.28,col);
+    g.addColorStop(0.74,mix(col,'#04060a',0.72));
+    g.addColorStop(1,'#04060a');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,r,0,6.283); ctx.fill();
+    // 经纬线（HUD 星球）
+    ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,r,0,6.283); ctx.clip();
+    ctx.strokeStyle=rgba(col,0.22); ctx.lineWidth=1;
+    for(var k=-2;k<=2;k++){
+      var yy=cy+k*r*0.36, rx=Math.sqrt(Math.max(0,r*r-Math.pow(k*r*0.36,2)));
+      ctx.beginPath(); ctx.ellipse(cx,yy,rx,rx*0.22,0,0,6.283); ctx.stroke();
+    }
+    for(var k2=-2;k2<=2;k2++){
+      ctx.beginPath(); ctx.ellipse(cx,cy,r*Math.abs(Math.cos(k2*0.5))+0.001,r,0,0,6.283); ctx.stroke();
+    }
+    ctx.restore();
+    // 边缘光
+    ctx.strokeStyle=rgba(col,glow?0.95:0.55); ctx.lineWidth=glow?2:1.2;
+    ctx.beginPath(); ctx.arc(cx,cy,r*0.995,0.6,2.4); ctx.stroke();
+    // 扫描线
+    ctx.globalAlpha=0.12; ctx.strokeStyle='#ffffff'; ctx.lineWidth=1;
+    for(var yy2=cy-r;yy2<cy+r;yy2+=4){
+      var dx=Math.sqrt(Math.max(0,r*r-(yy2-cy)*(yy2-cy)));
+      ctx.beginPath(); ctx.moveTo(cx-dx,yy2); ctx.lineTo(cx+dx,yy2); ctx.stroke();
+    }
+    ctx.globalAlpha=1;
+  }
+
+  function drawOrbit(){
+    ctx.lineWidth=1;
+    var seg=120;
+    for(var i=0;i<SERIES.length;i++){
+      var col=SERIES[i].color, base=(i/SERIES.length)*Math.PI*2+spin;
+      ctx.beginPath();
+      for(var k=0;k<=seg;k++){
+        var a=base+k/seg*Math.PI*2;
+        var p=project({x:Math.cos(a),y:0,z:Math.sin(a)});
+        if(k===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y);
+      }
+      ctx.strokeStyle=rgba(col,hover===i||openIdx===i?0.55:0.2);
+      ctx.stroke();
+      // 轨道上的能量点
+      var a2=base+performance.now()/2600;
+      var pp=project({x:Math.cos(a2),y:0,z:Math.sin(a2)});
+      ctx.fillStyle=rgba(col,0.9); ctx.beginPath(); ctx.arc(pp.x,pp.y,2.2,0,6.283); ctx.fill();
+    }
+  }
+
+  /* DOM 行星按钮 */
+  var layer=$('#planetLayer'), HITS=[], LBS=[];
+  SERIES.forEach(function(s,i){
+    var b=document.createElement('button');
+    b.className='hit'; b.type='button'; b.dataset.i=i;
+    b.style.setProperty('--pc',s.color);
+    b.setAttribute('aria-label',s.name+'（'+s.code+'）：'+s.positioning+'。点击进入系列详情。');
+    layer.appendChild(b); HITS.push(b);
+    var lb=document.createElement('span');
+    lb.className='chip-lb'; lb.style.setProperty('--pc',s.color);
+    lb.innerHTML='<b>'+s.code.split(' ')[0]+'</b>'+s.name;
+    layer.appendChild(lb); LBS.push(lb);
+    b.addEventListener('mouseenter',function(){hover=i;paused=performance.now()});
+    b.addEventListener('focus',function(){
+      /* 只有键盘触发的 focus 才弹卡片（程序化 focus 不弹，避免关闭面板后卡片乱跳） */
+      if(b.matches(':focus-visible')){hover=i;paused=performance.now();}
+    });
+    b.addEventListener('mouseleave',function(){if(hover===i)hover=-1});
+    b.addEventListener('blur',function(){if(hover===i)hover=-1});
+    b.addEventListener('click',function(){openSeries(i,true)});
+  });
+
+  /* tooltip */
+  var tip=$('#tip');
+  function tipHTML(s){
+    var ms=s.models.map(function(id){return MODELS[id].name}).join(' / ');
+    return '<div class="code">'+s.code+'</div><h3>'+s.name+'</h3><p class="slogan">'+s.slogan+'</p>'+
+      '<div class="meta"><div><span class="k">定位</span><span class="v">'+s.positioning+'</span></div>'+
+      '<div><span class="k">代表车型</span><span class="v">'+ms+'</span></div>'+
+      '<div><span class="k">车系规模</span><span class="v">'+s.models.length+' 款</span></div></div>'+
+      '<div class="go">点击进入 ↗</div>';
+  }
+
+  /* 布局（每帧） */
+  function layout(){
+    var now=performance.now();
+    var arr=[];
+    for(var i=0;i<SERIES.length;i++){
+      var p=project(pos(i));
+      var r=SERIES[i].size*p.s*PLANET_K*(hover===i?1.32:(openIdx===i?1.5:1));
+      arr.push({i:i,p:p,r:r});
+    }
+    arr.sort(function(a,b){return a.p.d-b.p.d});
+    for(var k=0;k<arr.length;k++){
+      var it=arr[k], i=it.i, p=it.p, r=it.r;
+      var k1=(r*2*1.5)/132;
+      HITS[i].style.transform='translate3d('+p.x.toFixed(1)+'px,'+p.y.toFixed(1)+'px,0) translate(-50%,-50%) scale('+k1.toFixed(3)+')';
+      HITS[i].style.opacity = p.d>1.8?0.55:1;
+      var inFront = (openIdx<0) ? true : (openIdx===i);
+      HITS[i].style.pointerEvents = inFront?'auto':'none';
+      LBS[i].style.transform='translate3d('+p.x.toFixed(1)+'px,'+(p.y+r+20).toFixed(1)+'px,0) translate(-50%,-50%)';
+      LBS[i].style.opacity=(p.d>2.2?0.3:1)*(inFront?1:0.25);
+    }
+    // tooltip 跟随
+    if(hover>=0 && openIdx<0){
+      var it2=null; arr.forEach(function(o){if(o.i===hover)it2=o});
+      if(it2){
+        var tw=tip.offsetWidth||280, th=tip.offsetHeight||160;
+        var tx=it2.p.x+it2.r+26, ty=it2.p.y-th/2;
+        tx=Math.min(Math.max(12,tx),W-tw-12); ty=Math.min(Math.max(70,ty),H-th-16);
+        tip.style.transform='translate3d('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px,0)';
+        tip.style.setProperty('--pc',SERIES[hover].color);
+        tip.innerHTML=tipHTML(SERIES[hover]);
+        tip.classList.add('on'); tip.setAttribute('aria-hidden','false');
+      }
+    }else{ tip.classList.remove('on'); tip.setAttribute('aria-hidden','true'); }
+  }
+
+  /* 渲染循环 */
+  var last=performance.now(), frames=0;
+  function frame(now){
+    var dt=Math.min(60,now-last)/1000; last=now;
+    var e=RM?1:Math.min(1,dt*7);
+    yaw+=(yawT-yaw)*e; pitch+=(pitchT-pitch)*e; camD+=(camDT-camD)*(RM?1:Math.min(1,dt*5));
+    if(!RM && now-paused>2600 && openIdx<0) spin+=dt*0.055;
+    ctx.clearRect(0,0,W,H);
+    // 星场
+    var t=now/1000;
+    for(var i=0;i<STARS.length;i++){
+      var s=STARS[i], p=project(s);
+      if(p.x<-40||p.x>W+40||p.y<-40||p.y>H+40) continue;
+      var tw=0.6+0.4*Math.sin(t*1.6+s.tw);
+      ctx.fillStyle='rgba(255,255,255,'+(s.o*tw*(1-Math.min(0.75,Math.abs(p.d)/9))).toFixed(2)+')';
+      ctx.beginPath(); ctx.arc(p.x,p.y,s.s,0,6.283); ctx.fill();
+    }
+    drawOrbit();
+    // 星球（远→近）
+    var arr=[];
+    for(var j=0;j<SERIES.length;j++){ var pp=project(pos(j)); arr.push({j:j,pp:pp}); }
+    arr.sort(function(a,b){return a.pp.d-b.pp.d});
+    arr.forEach(function(o){
+      var j=o.j, p=o.pp;
+      var r=SERIES[j].size*p.s*PLANET_K*(hover===j?1.32:(openIdx===j?1.5:1));
+      if(o.pp.d>2.6) return;
+      ctx.globalAlpha = o.pp.d>1.8?0.6:1;
+      drawPlanet(p.x,p.y,r,SERIES[j].color,hover===j||openIdx===j);
+      ctx.globalAlpha=1;
+    });
+    layout();
+    if(frames===0) layer.classList.add('ready');
+    if(++frames%3===0) $('#zoomv').textContent=Math.round(3.9/camD*100)+'%';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* ---------- 交互：拖拽 / 缩放 ---------- */
+  var dragging=false, lx=0, ly=0, moved=0;
+  cvs.addEventListener('pointerdown',function(e){
+    dragging=true; moved=0; lx=e.clientX; ly=e.clientY; paused=performance.now();
+    cvs.classList.add('grabbing'); cvs.setPointerCapture&&cvs.setPointerCapture(e.pointerId);
+  });
+  window.addEventListener('pointermove',function(e){
+    if(!dragging) return;
+    var dx=e.clientX-lx, dy=e.clientY-ly; lx=e.clientX; ly=e.clientY;
+    moved+=Math.abs(dx)+Math.abs(dy);
+    yawT-=dx*0.006; pitchT=Math.max(-0.62,Math.min(0.16,pitchT+dy*0.003));
+    if(!RM){yaw=yawT;pitch=pitchT;}
+  });
+  window.addEventListener('pointerup',function(){
+    if(dragging){dragging=false;cvs.classList.remove('grabbing');paused=performance.now();}
+  });
+  cvs.addEventListener('wheel',function(e){
+    if(openIdx>=0) return;
+    e.preventDefault();
+    camDT=Math.max(2.1,Math.min(7.2,camDT+ (e.deltaY>0?0.26:-0.26)));
+    paused=performance.now();
+  },{passive:false});
+  // 双指缩放
+  var pinch=null;
+  cvs.addEventListener('touchstart',function(e){
+    if(e.touches.length===2){ pinch=dist(e); }
+  },{passive:true});
+  cvs.addEventListener('touchmove',function(e){
+    if(e.touches.length===2&&pinch){
+      e.preventDefault();
+      var d=dist(e), k=pinch/d; pinch=d;
+      camDT=Math.max(2.1,Math.min(7.2,camDT*k));
+    }
+  },{passive:false});
+  function dist(e){var a=e.touches[0],b=e.touches[1];return Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)}
+
+  $('#btnIn').addEventListener('click',function(){camDT=Math.max(2.1,camDT-0.5);paused=performance.now()});
+  $('#btnOut').addEventListener('click',function(){camDT=Math.min(7.2,camDT+0.5);paused=performance.now()});
+  $('#btnReset').addEventListener('click',function(){yawT=0.35;pitchT=-0.30;camDT=3.9;spin=0;paused=0});
+  $('#btnDown').addEventListener('click',function(){document.querySelector('footer.site').scrollIntoView({behavior:RM?'auto':'smooth'})});
+
+  /* ---------- 键盘：行星间切换 ---------- */
+  layer.addEventListener('keydown',function(e){
+    var i=+document.activeElement.dataset.i;
+    if(isNaN(i)) return;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'){HITS[(i+1)%SERIES.length].focus();e.preventDefault()}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'){HITS[(i-1+SERIES.length)%SERIES.length].focus();e.preventDefault()}
+  });
+
+  /* ---------- 成就 / 进度 ---------- */
+  var explored={};
+  try{ explored=JSON.parse(localStorage.getItem('emg.explored')||'{}')||{}; }catch(e){}
+  function paintProgress(){
+    var n=Object.keys(explored).length, C2=157.1;
+    $('#pr').setAttribute('stroke-dashoffset',(C2*(1-n/SERIES.length)).toFixed(1));
+    var el=$('#prTxt'); el.textContent=n+' / '+SERIES.length;
+    el.classList.toggle('done',n>=SERIES.length);
+  }
+  paintProgress();
+  var toastT=null;
+  function toast(icon,t1,t2,ms){
+    var el=$('#toast');
+    el.innerHTML='<span class="bdg">'+icon+'</span><div><div class="t1">'+t1+'</div><div class="t2 caps">'+t2+'</div></div>';
+    el.classList.add('on'); el.setAttribute('aria-hidden','false');
+    clearTimeout(toastT); toastT=setTimeout(function(){el.classList.remove('on');el.setAttribute('aria-hidden','true')},ms||3200);
+  }
+
+  /* ---------- 打开 / 关闭系列 ---------- */
+  var detail=$('#detail'), panel=$('#panel'), wipe=$('#wipe');
+  function nearestYaw(i){
+    var target = Math.PI*1.5 - ang(i);
+    var d = target - yawT;
+    while(d>Math.PI) d-=Math.PI*2;
+    while(d<-Math.PI) d+=Math.PI*2;
+    return yawT + d;
+  }
+  function openSeries(i,animate){
+    openIdx=i; hover=-1; paused=performance.now();
+    var s=SERIES[i];
+    panel.style.setProperty('--pc',s.color);
+    var html=''+
+      '<button class="btn-mini" id="pClose" aria-label="返回星系">← 返回星系</button>'+
+      '<div class="pcode" style="margin-top:20px">'+s.code+'</div>'+
+      '<h2 id="pTitle">'+s.name+'</h2>'+
+      '<p class="pslogan">'+s.slogan+'</p>'+
+      '<p class="pdesc">'+s.description+'</p>'+
+      '<div class="prow"><span class="tag">定位 · '+s.positioning+'</span><span class="tag">'+s.models.length+' 款车型</span>'+
+      '<span class="badge">'+DATA_NOTE+'</span></div>'+
+      '<div class="mcards">'+s.models.map(function(id){
+        var m=MODELS[id];
+        return '<article class="mcard">'+
+          '<div class="mh"><h4>'+m.name+'</h4><span class="sub">'+m.subtitle+'</span></div>'+
+          '<div class="sil">车型剪影占位 · 可替换为官方产品图</div>'+
+          '<div class="mgrid">'+
+            '<div class="mg"><div class="k">续航</div><div class="v">'+m.range+'<small>km</small></div></div>'+
+            '<div class="mg"><div class="k">最高速度</div><div class="v">'+m.speed+'<small>km/h</small></div></div>'+
+            '<div class="mg"><div class="k">价格</div><div class="v">'+(m.price==null?'—':'¥'+m.price)+'</div></div>'+
+            '<div class="mg"><div class="k">智能</div><div class="v" style="font-size:.8rem;font-family:var(--font-ui)">'+m.features.length+' 项</div></div>'+
+          '</div>'+
+          '<div class="sw">'+m.colors.map(function(c){return '<i style="background:'+c+'"></i>'}).join('')+'</div>'+
+          '<div class="mfoot"><span class="badge">示意值 · 非官方数据</span>'+
+          '<a class="btn-mini go" href="03-model.html?id='+id+'">查看拆解 <span aria-hidden="true">→</span></a></div>'+
+        '</article>';
+      }).join('')+'</div>'+
+      '<p style="color:var(--txt-lo);font-size:.8rem;margin-top:24px">以上为占位示例数据，仅用于演示交互结构，非官方参数。</p>'+
+      '<button class="btn-mini back" id="pClose2">← 返回星系</button>';
+    panel.innerHTML=html;
+    panel.scrollTop=0;
+    function close(){
+      detail.classList.remove('on'); detail.setAttribute('aria-hidden','true');
+      document.body.classList.remove('lock');
+      openIdx=-1; paused=performance.now();
+      camDT=Math.min(camDT,4.2);
+      setTimeout(function(){HITS[0].focus({preventScroll:true})},60);
+    }
+    $('#pClose').addEventListener('click',close);
+    $('#pClose2').addEventListener('click',close);
+    $('#scrim').onclick=close;
+
+    if(!explored[s.id]){
+      explored[s.id]=1;
+      try{localStorage.setItem('emg.explored',JSON.stringify(explored))}catch(e){}
+      paintProgress();
+      var n=Object.keys(explored).length;
+      if(n>=SERIES.length){
+        setTimeout(function(){toast('★','电流大师 · 已解锁','EXPLORED ALL '+SERIES.length+' SERIES',5000)},1200);
+      }else{
+        setTimeout(function(){toast('✦','已点亮：'+s.name,'SERIES '+n+' / '+SERIES.length,2600)},900);
+      }
+    }
+
+    // 相机推进 + 电流环转场
+    yawT=nearestYaw(i); camDT=2.4;
+    if(animate && !RM){
+      wipe.classList.add('on');
+      setTimeout(function(){wipe.classList.remove('on')},900);
+    }
+    setTimeout(function(){
+      detail.classList.add('on'); detail.setAttribute('aria-hidden','false');
+      document.body.classList.add('lock');
+      panel.focus({preventScroll:true}); live.textContent='已进入 '+s.name;
+    }, RM?0:(animate?380:0));
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&openIdx>=0){ $('#pClose') && $('#pClose').click(); }
+  });
+})();
+</script>
+</body>
+</html>

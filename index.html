@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="is-night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>九号电流宇宙 / E-MOTION GALAXY · 站点索引（非官方粉丝项目）</title>
+<meta name="description" content="非官方粉丝向的九号电动系列与车型介绍站：电流环充能启动、系列星系、车型拆解、对比与配置器。">
+<style>
+:root{
+  --bg:#050505; --bg2:#0A0A0A; --panel:#0E1013;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
+  --hi:#F2F5F7; --mid:#98A2AE; --lo:#5A636E;
+  --volt:#C6FF00; --arc:#00E5FF; --heat:#FF6B00;
+  --font-d:"Orbitron","Space Grotesk","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+  --font-u:"Space Grotesk","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+  --font-m:ui-monospace,"SFMono-Regular",monospace;
+  --px:clamp(20px,5vw,88px); --maxw:1280px;
+  --ease-out:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--hi);font-family:var(--font-u);line-height:1.65;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--volt);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--px)}
+.bg{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(120% 80% at 70% -10%,rgba(198,255,0,.10),transparent 55%),
+             radial-gradient(90% 70% at 10% 110%,rgba(0,229,255,.10),transparent 60%),
+             linear-gradient(180deg,#03040A,#050505 60%)}
+.gridbg{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:90px 90px;
+  -webkit-mask-image:radial-gradient(75% 60% at 50% 30%,#000,transparent 80%);
+  mask-image:radial-gradient(75% 60% at 50% 30%,#000,transparent 80%)}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.4;mix-blend-mode:overlay;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
+header.top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;
+  gap:16px;padding:20px var(--px);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-d)}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--volt);box-shadow:0 0 10px var(--volt)}
+.tag{border:1px solid var(--line2);border-radius:999px;padding:5px 12px;color:var(--mid)}
+main{position:relative;z-index:2}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);gap:clamp(24px,5vw,64px);
+  align-items:center;padding:clamp(28px,6vh,72px) 0 clamp(36px,7vh,80px)}
+.kicker{color:var(--volt);font-size:.78rem;letter-spacing:.3em;font-family:var(--font-d)}
+h1{font-family:var(--font-d);font-size:clamp(2.1rem,6.4vw,4.4rem);line-height:1.03;margin:.24em 0 .3em;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--volt);text-shadow:0 0 30px rgba(198,255,0,.25)}
+.lead{color:var(--mid);max-width:46ch;margin:0 0 22px}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;
+  background:var(--volt);color:#04060a;font-weight:700;font-size:.92rem;
+  transition:transform .24s var(--ease-out),box-shadow .24s}
+.pill:hover{transform:translateY(-2px);box-shadow:0 0 0 1px var(--volt),0 18px 44px rgba(0,0,0,.6)}
+.ringbox{display:grid;place-items:center}
+.ringbox svg{width:min(320px,60vw);height:auto;filter:drop-shadow(0 0 30px rgba(198,255,0,.14))}
+.ringbox .lbl{margin-top:10px;font-family:var(--font-m);font-size:.7rem;letter-spacing:.2em;color:var(--lo)}
+h2.sec{font-family:var(--font-d);font-size:clamp(1.15rem,2.4vw,1.7rem);margin:0 0 6px}
+p.sub{color:var(--mid);margin:0 0 26px;font-size:.92rem}
+section{padding:clamp(26px,5vh,54px) 0;border-top:1px solid var(--line)}
+.cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{position:relative;padding:20px 18px;border-radius:14px;border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));overflow:hidden;
+  transition:transform .3s var(--ease-out),border-color .3s,box-shadow .3s}
+.card::before{content:"";position:absolute;left:0;top:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--c,var(--volt)),transparent);opacity:.6}
+a.card:hover{transform:translateY(-4px);border-color:var(--c,var(--volt));
+  box-shadow:0 0 0 1px var(--c,var(--volt)),0 22px 60px rgba(0,0,0,.6)}
+.card.dim{opacity:.62}
+.card .idx{font-family:var(--font-m);font-size:10px;letter-spacing:.2em;color:var(--lo)}
+.card h3{margin:10px 0 6px;font-size:1.05rem;font-family:var(--font-d);letter-spacing:.02em}
+.card p{margin:0;color:var(--mid);font-size:.86rem}
+.card .st{position:absolute;top:14px;right:14px;font-size:10px;letter-spacing:.1em;
+  border:1px solid var(--line2);border-radius:999px;padding:2px 8px;color:var(--mid)}
+.card .st.live{color:#04060a;background:var(--volt);border-color:var(--volt);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+td{padding:9px 8px;border-bottom:1px dashed var(--line);vertical-align:top}
+td.k{color:var(--lo);white-space:nowrap;width:1%;font-family:var(--font-m);font-size:.78rem}
+td.v{color:var(--mid)}
+td.v b{color:var(--hi);font-weight:600}
+code{font-family:var(--font-m);font-size:.82em;background:rgba(255,255,255,.06);
+  border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.foot{color:var(--mid);font-size:.88rem;padding:clamp(30px,6vh,60px) 0 calc(var(--px) + 30px);border-top:1px solid var(--line)}
+.fgrid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.foot p{margin:0 0 6px}
+.foot strong{color:var(--hi)}
+.foot a.mail{color:var(--volt);border-bottom:1px solid rgba(198,255,0,.3)}
+.legal{margin:26px 0 0;color:var(--lo);font-size:.8rem;line-height:1.75}
+@media (max-width:860px){ .hero{grid-template-columns:1fr} .ringbox{order:-1} }
+@media (prefers-reduced-motion:reduce){ *{transition-duration:.001ms!important} .scan{display:none} }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="gridbg" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="brand"><span class="dot" aria-hidden="true"></span> E-MOTION GALAXY</div>
+  <div class="tag">非官方粉丝项目</div>
+</header>
+
+<main>
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="kicker">SEGWAY-NINEBOT · FAN PROJECT</div>
+      <h1>九号电流宇宙<br><em>E-MOTION GALAXY</em></h1>
+      <p class="lead">一个非官方的粉丝向站点：把「浏览产品」做成一次<strong>充能启动仪式</strong>——能量环充满，光裂开，车驶出来。</p>
+      <a class="pill" href="01-hero.html">进入首页 · 为城市注入电流 <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="ringbox" aria-hidden="true">
+      <svg viewBox="0 0 320 320">
+        <defs>
+          <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="30" y1="30" x2="290" y2="290">
+            <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#C6FF00"/>
+          </linearGradient>
+        </defs>
+        <circle cx="160" cy="160" r="128" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="1.5"/>
+        <path d="M160 32 A128 128 0 0 0 160 288" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="7" stroke-linecap="round"/>
+        <path d="M160 32 A128 128 0 0 1 160 288" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="160" cy="160" r="128" fill="none" stroke="url(#g)" stroke-width="4"
+                stroke-linecap="round" stroke-dasharray="804" stroke-dashoffset="200"
+                transform="rotate(-90 160 160)"/>
+        <circle cx="160" cy="160" r="52" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="2"/>
+        <circle cx="160" cy="160" r="8" fill="#C6FF00"/>
+      </svg>
+      <div class="lbl">CHARGE 75% · 示意</div>
+    </div>
+  </div>
+
+  <section aria-labelledby="pages">
+    <h2 class="sec" id="pages">页面</h2>
+    <p class="sub">分轮交付中：已完成的两页可以直接点进去看，未完成的先占位。</p>
+    <div class="cards">
+      <a class="card" href="01-hero.html" style="--c:#C6FF00">
+        <div class="idx">R2 / 01</div><span class="st live">已完成</span>
+        <h3>首页 Hero</h3>
+        <p>电流环充能 0→100%，满环裂开、车辆驶出；HUD 数字滚动、指针视差、日/夜氛围、合成音（默认静音）。</p>
+      </a>
+      <a class="card" href="02-galaxy.html" style="--c:#00E5FF">
+        <div class="idx">R3 / 02</div><span class="st live">已完成</span>
+        <h3>系列星系</h3>
+        <p>Canvas 透视投影星系：3 个系列 = 3 颗行星，拖拽旋转 / 滚轮缩放 / 悬停看轮廓 / 点击镜头推进，集齐 3 个解锁徽章。</p>
+      </a>
+      <div class="card dim" style="--c:#FF6B00">
+        <div class="idx">R4 / 03</div><span class="st">待生成</span>
+        <h3>车型详情 · 爆炸拆解</h3>
+        <p>滚动逐层浮出电池 / 电机 / 制动 / 轮胎 / 智能系统，部件连线标注 + 电流流动 + 能量回收可视化。</p>
+      </div>
+      <div class="card dim" style="--c:#C6FF00">
+        <div class="idx">R5 / 04</div><span class="st">待生成</span>
+        <h3>对比 · 配置器 · 时间轴</h3>
+        <p>雷达图从中心生长、Canvas 配置卡片、电流沿光轨穿过技术里程碑（含滚动分支叙事）。</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="repo">
+    <h2 class="sec" id="repo">仓库结构</h2>
+    <p class="sub">站点是纯静态的：没有构建步骤、没有外部依赖、没有后端，克隆下来双击就能开。</p>
+    <table>
+      <tr><td class="k">index.html</td><td class="v">本页 · 站点索引（GitHub Pages 入口）</td></tr>
+      <tr><td class="k">01-hero.html</td><td class="v">首页 Hero · 能量环充能启动</td></tr>
+      <tr><td class="k">02-galaxy.html</td><td class="v">系列星系 · Canvas 透视投影</td></tr>
+      <tr><td class="k">data/*.json</td><td class="v"><b>数据层</b>：series / models / personalities / scenes / timeline —— 全部 <code>dataMode:"placeholder"</code></td></tr>
+      <tr><td class="k">project/plan.md</td><td class="v">策划文档：信息架构、设计令牌、创新交互清单、路由、组件树、动效清单</td></tr>
+      <tr><td class="k">project/design-tokens.css</td><td class="v">设计令牌（色板 / 字体 / 间距 / 时长 / 缓动 / 运行时变量）</td></tr>
+      <tr><td class="k">project/notes/</td><td class="v">离线校验脚本：<code>verify-hero.js</code>、<code>verify-galaxy.js</code>、<code>verify-projection.js</code></td></tr>
+    </table>
+  </section>
+
+  <section aria-labelledby="how">
+    <h2 class="sec" id="how">交互速查</h2>
+    <table>
+      <tr><td class="k">01 首页</td><td class="v"><b>滚轮 / 长按环 / ↑↓ / 空格</b> 为电流环充能；<b>Esc</b> 跳过启动</td></tr>
+      <tr><td class="k">02 星系</td><td class="v"><b>拖拽</b> 旋转 · <b>滚轮</b> 缩放 · <b>悬停</b> 看轮廓 · <b>点击</b> 进入系列 · <b>← →</b> 切换行星 · <b>Enter</b> 进入 · <b>Esc</b> 返回</td></tr>
+      <tr><td class="k">全站</td><td class="v">右上角可切日/夜氛围；移动端自动降级（少粒子、无自定义光标）；<code>prefers-reduced-motion</code> 下动画全关</td></tr>
+    </table>
+  </section>
+</div>
+</main>
+
+<div class="wrap">
+<footer class="foot">
+  <div class="fgrid">
+    <div>
+      <p><strong>非官方粉丝网站，仅用于学习与展示。</strong></p>
+      <p>本站与 Segway-Ninebot 无任何隶属或合作关系，不销售任何产品。</p>
+    </div>
+    <div>
+      <p>辅助工具：DeepSeek</p>
+      <p>创作者：苏好好</p>
+      <p>邮箱：<a class="mail" href="mailto:3348304834@qq.com">3348304834@qq.com</a></p>
+    </div>
+    <div>
+      <p>数据来源说明</p>
+      <p style="color:var(--lo);font-size:.82rem">站内所有系列、车型与参数均为<strong>占位示例数据</strong>，仅用于演示交互结构，非官方参数。正式版将替换为可溯源的公开资料并逐项标注来源。</p>
+    </div>
+  </div>
+  <p class="legal">免责声明：本站所有图形（含星球、车体剪影、图标）均为原创几何示意，未使用任何未经授权的官方图片、商标或摄影素材；文中提及的产品与技术名词仅用于客观介绍。若权利人认为内容不妥，请通过上方邮箱联系，我们将立即调整或删除。</p>
+</footer>
+</div>
+</body>
+</html>

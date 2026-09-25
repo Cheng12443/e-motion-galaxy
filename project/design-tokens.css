@@ -1,0 +1,95 @@
+/* 九号电流宇宙 / E-MOTION GALAXY — 设计令牌 (Design Tokens)
+   可整段内联进单文件 HTML 预览版。--v 前缀 = 可变(由 JS/滚动驱动) */
+:root {
+  /* ---------- 基底 ---------- */
+  --bg-void: #050505;
+  --bg-deep: #0A0A0A;
+  --bg-panel: #0E1013;
+  --bg-panel-2: #14181D;
+  --line-hair: rgba(255, 255, 255, 0.08);
+  --line-soft: rgba(255, 255, 255, 0.16);
+  --txt-hi: #F2F5F7;
+  --txt-mid: #98A2AE;
+  --txt-lo: #5A636E;
+
+  /* ---------- 强调色（三色，克制使用） ---------- */
+  --volt: #C6FF00;          /* 荧光绿 · 主强调 · 能量/充能 */
+  --volt-dim: rgba(198, 255, 0, 0.18);
+  --arc: #00E5FF;           /* 电光蓝 · 科技/数据/HUD */
+  --arc-dim: rgba(0, 229, 255, 0.18);
+  --heat: #FF6B00;          /* 能量橙 · 警示/动能回收/暖光 */
+  --heat-dim: rgba(255, 107, 0, 0.18);
+
+  /* 场景色（由当前场景覆盖） */
+  --accent: var(--volt);
+  --accent-dim: var(--volt-dim);
+
+  /* ---------- 玻璃拟态 / 金属 ---------- */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-brd: rgba(255, 255, 255, 0.10);
+  --glass-blur: 14px;
+  --metal: linear-gradient(100deg, #1B1F24 0%, #2A3038 38%, #171A1E 62%, #23282F 100%);
+  --scanline: repeating-linear-gradient(180deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);
+  --grid-90: 90px;
+
+  /* ---------- 字体 ---------- */
+  --font-display: "Orbitron", "Space Grotesk", "Noto Sans SC", "PingFang SC", system-ui, sans-serif; /* HUD 数字/英文标题 */
+  --font-ui: "Space Grotesk", "Noto Sans SC", "PingFang SC", system-ui, sans-serif;                   /* 正文/中文 */
+  --font-mono: "SFMono-Regular", ui-monospace, "JetBrains Mono", monospace;                            /* 代码/参数 */
+
+  /* 字号阶梯（fluid） */
+  --fs-hero: clamp(2.6rem, 8vw, 7.5rem);
+  --fs-h1: clamp(2rem, 5vw, 4rem);
+  --fs-h2: clamp(1.5rem, 3vw, 2.5rem);
+  --fs-h3: clamp(1.15rem, 2vw, 1.5rem);
+  --fs-body: clamp(0.95rem, 1.1vw, 1.0625rem);
+  --fs-cap: 0.8125rem;
+  --fs-hud: clamp(2rem, 4.5vw, 3.75rem);   /* 仪表数值 */
+  --tracking-caps: 0.18em;
+  --tracking-hud: 0.02em;
+
+  /* ---------- 间距 / 网格 / 圆角 ---------- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px; --sp-9: 96px;
+  --page-x: clamp(20px, 5vw, 88px);
+  --maxw: 1440px;
+  --r-sm: 8px; --r-md: 14px; --r-lg: 22px; --r-pill: 999px;
+
+  /* ---------- 辉光 / 阴影 ---------- */
+  --glow-volt: 0 0 0 1px rgba(198,255,0,.35), 0 0 24px rgba(198,255,0,.28), 0 0 64px rgba(198,255,0,.12);
+  --glow-arc:  0 0 0 1px rgba(0,229,255,.35), 0 0 24px rgba(0,229,255,.28), 0 0 64px rgba(0,229,255,.12);
+  --shadow-card: 0 18px 60px rgba(0,0,0,.65);
+  --shadow-lift: 0 28px 90px rgba(0,0,0,.75);
+
+  /* ---------- 动效 ---------- */
+  --dur-1: 120ms; --dur-2: 240ms; --dur-3: 420ms; --dur-4: 720ms; --dur-5: 1200ms;
+  --ease-out: cubic-bezier(.22,.61,.36,1);
+  --ease-inout: cubic-bezier(.65,.05,.36,1);
+  --ease-spring: cubic-bezier(.34,1.36,.44,1);     /* 能量环开合/磁吸 */
+  --ease-current: cubic-bezier(.16,.84,.44,1);     /* 电流扫过 */
+
+  /* ---------- 层级 ---------- */
+  --z-bg: 0; --z-stage: 10; --z-hud: 20; --z-nav: 40; --z-cursor: 60; --z-overlay: 80; --z-transition: 100;
+
+  /* ---------- 运行时变量（JS 驱动） ---------- */
+  --v-charge: 0;            /* 0→1 能量环充能进度 */
+  --v-scroll: 0;            /* 0→1 当前章节滚动进度 */
+  --v-tilt-x: 0deg;         /* 车辆视差 */
+  --v-tilt-y: 0deg;
+  --v-wheel: 0deg;          /* 轮毂转速 */
+  --v-scan: 0;              /* 扫描线位置 */
+  --v-speed: 0;             /* HUD 当前速度（数字滚动） */
+  --v-eco: 0;               /* 能量回收强度 0→1 */
+  --v-daynight: 0;          /* 0=夜 1=昼 */
+}
+
+/* 无障碍：全局降级 */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-1: 1ms; --dur-2: 1ms; --dur-3: 1ms; --dur-4: 1ms; --dur-5: 1ms; }
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+  .scanline, .particle-layer, .glow-pulse { display: none !important; }
+}
+
+/* 移动端降级闸门（由 JS 加 .lite 到 <html>） */
+html.lite .glass { backdrop-filter: none; background: rgba(20,24,29,.92); }
+html.lite .blur-heavy { filter: none; }
