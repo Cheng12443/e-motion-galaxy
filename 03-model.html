@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="is-night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>车型详情 · 爆炸拆解｜九号电流宇宙（非官方）</title>
+<meta name="description" content="滚动触发爆炸拆解：电池 / 电机 / 制动 / 轮胎 / 智能系统逐层浮出，部件连线、参数浮出、能量回收可视化。非官方粉丝网站。">
+<style>
+:root{
+  --bg:#050505; --bg2:#0A0A0A; --panel:#0E1013;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
+  --hi:#F2F5F7; --mid:#98A2AE; --lo:#5A636E;
+  --volt:#C6FF00; --arc:#00E5FF; --heat:#FF6B00;
+  --accent:#C6FF00; --accent-dim:rgba(198,255,0,.16);
+  --glass:rgba(255,255,255,.04); --glassbrd:rgba(255,255,255,.10);
+  --font-d:"Orbitron","Space Grotesk","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+  --font-u:"Space Grotesk","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+  --font-m:ui-monospace,"SFMono-Regular",monospace;
+  --px:clamp(20px,5vw,88px); --maxw:1440px;
+  --dur-2:240ms; --dur-3:420ms; --dur-4:720ms;
+  --ease-out:cubic-bezier(.22,.61,.36,1); --ease-spring:cubic-bezier(.34,1.36,.44,1);
+  --body:#1A1F26;
+  --v-eco:0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--hi);font-family:var(--font-u);line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--accent);color:#04060a}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.caps{font-family:var(--font-d);text-transform:uppercase;letter-spacing:.18em}
+.num{font-family:var(--font-d);font-variant-numeric:tabular-nums}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.4;mix-blend-mode:overlay;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px)}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(120% 85% at 50% 45%,transparent 42%,rgba(0,0,0,.8) 100%)}
+
+/* ---------- nav ---------- */
+header.hudbar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;gap:14px;align-items:center;
+  justify-content:space-between;padding:12px var(--px);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;
+  background:linear-gradient(180deg,rgba(5,5,5,.92),rgba(5,5,5,0))}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-d)}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);
+  animation:pulse 2.2s var(--ease-out) infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hudbar nav{display:flex;gap:16px;color:var(--mid);flex-wrap:wrap}
+.hudbar nav a:hover,.hudbar nav a[aria-current]{color:var(--accent)}
+.mdlbar{position:fixed;z-index:39;left:0;right:0;top:52px;display:flex;gap:8px;overflow-x:auto;
+  padding:6px var(--px) 10px;scrollbar-width:none}
+.mdlbar::-webkit-scrollbar{display:none}
+.pill{flex:0 0 auto;border:1px solid var(--line2);border-radius:999px;padding:6px 13px;font-size:.76rem;
+  letter-spacing:.1em;color:var(--mid);background:rgba(8,10,13,.6);backdrop-filter:blur(8px);
+  transition:all var(--dur-2) var(--ease-out)}
+.pill:hover{color:var(--hi);border-color:var(--hi)}
+.pill[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#04060a;font-weight:700}
+
+/* ---------- 首屏 ---------- */
+#intro{position:relative;min-height:100svh;display:grid;align-items:center;
+  padding:clamp(110px,18vh,190px) var(--px) clamp(40px,8vh,90px);
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(20px,4vw,56px);
+  max-width:var(--maxw);margin:0 auto}
+.kicker{color:var(--accent);font-size:.78rem;letter-spacing:.3em;font-family:var(--font-d)}
+h1{font-family:var(--font-d);font-size:clamp(2.2rem,6vw,4.6rem);line-height:1;margin:.22em 0 .1em;letter-spacing:-.01em}
+h1 small{display:block;font-size:.3em;letter-spacing:.22em;color:var(--mid);margin-top:.7em;font-weight:400}
+.subline{color:var(--mid);margin:0 0 22px;max-width:40ch}
+.metrics{display:flex;gap:clamp(16px,4vw,44px);flex-wrap:wrap;margin:26px 0 24px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0}
+.metric .k{font-size:.68rem;letter-spacing:.16em;color:var(--lo);text-transform:uppercase}
+.metric .v{font-family:var(--font-d);font-size:clamp(1.5rem,3.4vw,2.5rem);font-variant-numeric:tabular-nums;line-height:1.1}
+.metric .v small{font-size:.38em;color:var(--mid);margin-left:3px}
+.metric .v.na{color:var(--mid)}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:12px 20px;border-radius:999px;
+  border:1px solid var(--line2);background:var(--glass);backdrop-filter:blur(10px);font-size:.86rem;
+  letter-spacing:.05em;transition:all var(--dur-2) var(--ease-out)}
+.btn:hover{border-color:var(--accent);transform:translateY(-2px)}
+.btn.pri{background:var(--accent);color:#04060a;border-color:var(--accent);font-weight:700}
+.badge{display:inline-block;border:1px solid var(--line2);border-radius:999px;padding:1px 8px;
+  font-size:10px;letter-spacing:.08em;color:var(--lo);white-space:nowrap}
+.note{color:var(--lo);font-size:.8rem;margin:16px 0 0}
+
+/* ---------- 车辆舞台 ---------- */
+/* 宽高比必须严格等于 SVG 的 1200:800 —— 否则 preserveAspectRatio 会加信箱留白，
+   绝对定位的 chip 百分比就会和 viewBox 坐标错位。故用宽度上限（而非 max-height）约束尺寸。 */
+.vstage{position:relative;aspect-ratio:1360/900;width:min(100%,calc(70svh * 1.511));margin:0 auto}
+.vstage svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.spin{transform-box:fill-box;transform-origin:center}
+body.rolling .spin{animation:spin 1.5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.beamfx{opacity:0;transition:opacity var(--dur-4)}
+body.lights .beamfx{opacity:1}
+#intro .vstage{transform:scale(1.02)}
+
+/* ---------- 拆解区 ---------- */
+#explode{position:relative}
+.stick{position:sticky;top:0;height:100svh;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,300px);
+  gap:clamp(12px,2vw,32px);align-items:center;padding:clamp(88px,13vh,140px) var(--px) 30px;
+  max-width:var(--maxw);margin:0 auto;width:100%}
+.stick .left{position:relative}
+/* 爆炸图徽章：SVG 内绘制，随画面等比缩放，不存在标签重叠问题 */
+.badge-g circle{fill:rgba(6,8,11,.86);stroke:rgba(255,255,255,.35);stroke-width:2;transition:all var(--dur-3)}
+.badge-g text{font-family:var(--font-d);font-size:17px;letter-spacing:.06em;fill:var(--hi);transition:fill var(--dur-3)}
+.badge-g.bact circle{stroke:var(--accent);fill:rgba(198,255,0,.14);stroke-width:2.5}
+.badge-g.bact text{fill:var(--accent)}
+.badge-g .tick{stroke:rgba(255,255,255,.35);stroke-width:2;transition:stroke var(--dur-3)}
+.badge-g.bact .tick{stroke:var(--accent)}
+
+/* ---------- HUD ---------- */
+.hudpanel{border:1px solid var(--glassbrd);border-radius:12px;background:var(--glass);
+  backdrop-filter:blur(14px);padding:16px 16px 14px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.hudpanel .hh{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:.68rem;letter-spacing:.16em;color:var(--lo);text-transform:uppercase;margin-bottom:12px}
+.rail{display:flex;flex-direction:column;gap:2px;margin-bottom:14px}
+.railrow{display:flex;align-items:center;gap:9px;padding:5px 0;color:var(--lo);font-size:.78rem;
+  border-left:1px solid var(--line);padding-left:11px;transition:all var(--dur-3)}
+.railrow i{width:7px;height:7px;border-radius:50%;background:var(--line2);flex:0 0 auto;transition:all var(--dur-3)}
+.railrow b{font-family:var(--font-d);letter-spacing:.1em;font-size:.7rem;font-weight:500}
+.railrow.done{color:var(--mid)}
+.railrow.done i{background:var(--mid)}
+.railrow.act{color:var(--hi);border-left-color:var(--accent)}
+.railrow.act i{background:var(--accent);box-shadow:0 0 10px var(--accent);transform:scale(1.3)}
+.spec{border-top:1px dashed var(--line);padding-top:12px;min-height:132px}
+.spec .sk{font-family:var(--font-d);font-size:11px;letter-spacing:.18em;color:var(--accent)}
+.spec .sc{font-size:1rem;margin:3px 0 10px}
+.specrow{display:flex;justify-content:space-between;gap:10px;font-size:.82rem;padding:4px 0;
+  border-bottom:1px dashed rgba(255,255,255,.06)}
+.specrow .k{color:var(--lo);white-space:nowrap}
+.specrow .v{text-align:right;font-family:var(--font-d);letter-spacing:.04em}
+.fadein{animation:fin .45s var(--ease-out) both}
+@keyframes fin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hudfoot{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;display:flex;
+  justify-content:space-between;align-items:center;gap:8px}
+.hudfoot .big{font-family:var(--font-d);font-size:1.35rem;font-variant-numeric:tabular-nums}
+.hudfoot .big small{font-size:.5em;color:var(--mid);margin-left:2px}
+.rail2{position:absolute;left:0;top:0;bottom:0;width:3px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.rail2 i{position:absolute;left:0;top:0;width:100%;height:0%;background:linear-gradient(180deg,var(--arc),var(--volt))}
+.stick .left{position:relative}
+.scrollhint{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);font-size:.7rem;
+  letter-spacing:.16em;color:var(--lo);font-family:var(--font-d);text-transform:uppercase;white-space:nowrap}
+.scrollhint i{display:inline-block;animation:dn 1.6s ease-in-out infinite}
+@keyframes dn{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
+
+/* ---------- 能量回收 ---------- */
+#recover{position:relative}
+.recgrid{position:sticky;top:0;height:100svh;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,330px);
+  gap:clamp(12px,2vw,32px);align-items:center;padding:clamp(88px,13vh,140px) var(--px) 30px;
+  max-width:var(--maxw);margin:0 auto;width:100%}
+.ecobar{height:8px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 0 4px}
+.ecobar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--heat),var(--volt));
+  box-shadow:0 0 16px rgba(255,107,0,.5)}
+.ecolab{display:flex;justify-content:space-between;font-size:.68rem;letter-spacing:.14em;color:var(--lo)}
+
+/* ---------- 规格 / 入口 ---------- */
+section.plain{position:relative;z-index:2;padding:clamp(40px,8vh,90px) var(--px);max-width:var(--maxw);margin:0 auto}
+h2{font-family:var(--font-d);font-size:clamp(1.3rem,3vw,2.1rem);margin:0 0 6px}
+p.sub{color:var(--mid);margin:0 0 26px;font-size:.92rem}
+table.spec-t{width:100%;border-collapse:collapse;font-size:.88rem}
+table.spec-t td{padding:10px 8px;border-bottom:1px dashed var(--line);vertical-align:top}
+table.spec-t td.k{color:var(--lo);width:1%;white-space:nowrap;font-family:var(--font-d);font-size:.78rem;letter-spacing:.08em}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line2);border-radius:999px;padding:5px 12px;font-size:.8rem;color:var(--mid)}
+.grid2{display:grid;gap:clamp(16px,3vw,34px);grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.sw{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.swbtn{width:32px;height:32px;border-radius:50%;border:2px solid transparent;transition:all var(--dur-2)}
+.swbtn[aria-pressed="true"]{border-color:var(--hi);transform:scale(1.12)}
+.tog{border:1px solid var(--line2);border-radius:999px;padding:8px 14px;font-size:.8rem;color:var(--mid);
+  transition:all var(--dur-2)}
+.tog[aria-pressed="true"]{background:var(--accent);color:#04060a;border-color:var(--accent);font-weight:700}
+.pricebox{border:1px solid var(--line);border-radius:14px;padding:20px;background:linear-gradient(180deg,rgba(255,255,255,.035),transparent)}
+.pricebox .p{font-family:var(--font-d);font-size:clamp(1.5rem,3vw,2.2rem)}
+.pricebox .p.na{color:var(--mid)}
+footer.site{border-top:1px solid var(--line);padding:clamp(34px,6vh,64px) var(--px) calc(var(--px) + 30px);
+  color:var(--mid);font-size:.88rem;position:relative;z-index:2}
+footer.site .fgrid{max-width:var(--maxw);margin:0 auto;display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+footer.site p{margin:0 0 6px}
+footer.site strong{color:var(--hi)}
+footer.site a.mail{color:var(--accent);border-bottom:1px solid var(--accent-dim)}
+footer.site .legal{margin:26px auto 0;max-width:var(--maxw);color:var(--lo);font-size:.8rem;line-height:1.75}
+
+@media (max-width:960px){
+  #intro{grid-template-columns:1fr;padding-top:clamp(120px,20vh,160px)}
+  #intro .vstage{order:-1;max-height:56svh}
+  .stick,.recgrid{grid-template-columns:1fr;gap:10px;padding-top:clamp(104px,16vh,150px);align-content:start}
+  .hudpanel{padding:12px 14px}
+  .spec{min-height:0}
+  .hudbar nav{display:none}
+  .vstage{max-height:44svh}
+  .badge-g text{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .scan{display:none}
+  body.rolling .spin{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="vig" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<header class="hudbar">
+  <div class="brand"><span class="dot" aria-hidden="true"></span> E-MOTION GALAXY</div>
+  <nav aria-label="站点小节">
+    <a href="01-hero.html">01 启动</a>
+    <a href="02-galaxy.html">02 系列星系</a>
+    <a href="03-model.html" aria-current="page">03 车型拆解</a>
+    <a href="04a-compare.html">04 对比</a>
+  </nav>
+</header>
+<div class="mdlbar" id="mdlbar" role="group" aria-label="切换车型"></div>
+
+<main>
+<!-- ================= 首屏 ================= -->
+<section id="intro" aria-labelledby="mTitle">
+  <div>
+    <div class="kicker" id="mSeries">CITY FLOW · 城市流动系列</div>
+    <h1 id="mTitle">NOVA C2<small id="mSub">城市穿梭进阶</small></h1>
+    <p class="subline" id="mDesc">滚动向下，把整车拆开看：电池、电机、制动、轮胎、智能系统逐层浮出。</p>
+    <div class="metrics">
+      <div class="metric"><div class="k caps">Range</div><div class="v"><span id="kRange">0</span><small>km</small></div></div>
+      <div class="metric"><div class="k caps">Top Speed</div><div class="v"><span id="kSpeed">0</span><small>km/h</small></div></div>
+      <div class="metric"><div class="k caps">Price</div><div class="v na" id="kPrice">—</div></div>
+    </div>
+    <div class="cta">
+      <a class="btn pri" href="#explode">开始拆解 <span aria-hidden="true">↓</span></a>
+      <a class="btn" href="02-galaxy.html">← 返回系列星系</a>
+      <a class="btn" href="04a-compare.html" id="lnCompare">加入对比</a>
+    </div>
+    <p class="note">页面读数为<b>占位示意值</b>，非官方参数 · 车辆为原创几何示意剪影，可替换为官方产品图</p>
+  </div>
+  <div class="vstage" id="stageA"></div>
+</section>
+
+<!-- ================= 拆解 ================= -->
+<section id="explode" style="height:460vh" aria-label="爆炸拆解动画">
+  <div class="stick">
+    <div class="left">
+      <div class="vstage" id="stageB"></div>
+    </div>
+    <aside class="hudpanel" aria-live="polite">
+      <div class="hh"><span>Exploded View</span><span id="hudStep">0 / 5</span></div>
+      <div class="rail" id="rail"></div>
+      <div class="spec" id="spec"></div>
+      <div class="hudfoot">
+        <div><div class="k" style="font-size:.66rem;letter-spacing:.14em;color:var(--lo)">RANGE</div>
+          <div class="big"><span id="hRange">0</span><small>km</small></div></div>
+        <div><div class="k" style="font-size:.66rem;letter-spacing:.14em;color:var(--lo)">TOP SPEED</div>
+          <div class="big"><span id="hSpeed">0</span><small>km/h</small></div></div>
+      </div>
+      <div style="margin-top:10px"><span class="badge">示意值 · 非官方数据</span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= 能量回收 ================= -->
+<section id="recover" style="height:190vh" aria-label="能量回收可视化">
+  <div class="recgrid">
+    <div class="left"><div class="vstage" id="stageC"></div></div>
+    <aside class="hudpanel">
+      <div class="hh"><span>Regenerative</span><span>EABS</span></div>
+      <div class="spec" style="border-top:0;padding-top:0">
+        <div class="sk">ENERGY RECOVERY</div>
+        <div class="sc">动能 → 电能</div>
+        <div style="color:var(--mid);font-size:.84rem">
+          制动与下坡时，电机进入发电状态，把车身的动能转回电池。回收强度受车速、电量与温度影响，
+          这里只画流向，不标数值。
+        </div>
+        <div class="ecobar"><i id="ecoFill"></i></div>
+        <div class="ecolab"><span>RECOVERY</span><span id="ecoTxt">0%</span></div>
+      </div>
+      <div style="margin-top:14px"><span class="badge">示意图 · 不含具体数值</span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= 规格 / 入口 ================= -->
+<section class="plain" aria-labelledby="sTitle">
+  <h2 id="sTitle">规格与配置</h2>
+  <p class="sub">下方数值全部为占位示例，用于演示交互结构 —— 正式版将替换为可溯源的公开资料。</p>
+  <div class="grid2">
+    <div>
+      <table class="spec-t" id="specTable"></table>
+    </div>
+    <div>
+      <h3 style="font-size:1rem;margin:0 0 10px">智能功能</h3>
+      <div class="chips" id="feat"></div>
+      <h3 style="font-size:1rem;margin:22px 0 10px">适配场景</h3>
+      <div class="chips" id="sceneChips"></div>
+      <h3 style="font-size:1rem;margin:22px 0 10px">配色</h3>
+      <div class="sw" id="swatches"></div>
+      <div class="sw" style="margin-top:14px">
+        <button class="tog" id="btnWheel" aria-pressed="false">◍ 轮毂旋转</button>
+        <button class="tog" id="btnLight" aria-pressed="true">☀ 大灯</button>
+      </div>
+    </div>
+  </div>
+  <div class="grid2" style="margin-top:34px">
+    <div class="pricebox">
+      <div class="k caps" style="font-size:.68rem;color:var(--lo)">Price</div>
+      <div class="p na" id="pPrice">—</div>
+      <div class="note" id="pNote">未取得官方价格，此处显示为「—」，不做推测。</div>
+    </div>
+    <div class="pricebox">
+      <div class="k caps" style="font-size:.68rem;color:var(--lo)">Next</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+        <a class="btn pri" href="04b-configurator.html" id="lnConfig">进入配置器 →</a>
+        <a class="btn" href="04c-timeline.html">品牌技术时间轴</a>
+        <a class="btn" href="02-galaxy.html">← 回到系列星系</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site">
+  <div class="fgrid">
+    <div>
+      <p><strong>非官方粉丝网站，仅用于学习与展示。</strong></p>
+      <p>本站与 Segway-Ninebot 无任何隶属或合作关系，不销售任何产品。</p>
+    </div>
+    <div>
+      <p>辅助工具：DeepSeek</p>
+      <p>创作者：苏好好</p>
+      <p>邮箱：<a class="mail" href="mailto:3348304834@qq.com">3348304834@qq.com</a></p>
+    </div>
+    <div>
+      <p>数据来源说明</p>
+      <p style="color:var(--lo);font-size:.82rem">本页所有参数均为占位示例值，仅用于演示交互，非官方参数。车辆图形为原创几何示意。</p>
+    </div>
+  </div>
+  <p class="legal">免责声明：本站所有图形（含车体剪影、部件示意、图标）均为原创几何绘制，未使用任何未经授权的官方图片、商标或摄影素材。若权利人认为内容不妥，请通过上方邮箱联系，我们将立即调整或删除。</p>
+</footer>
+
+<!-- ================= 车辆模板（三份实例由此生成） ================= -->
+<template id="tplvs">
+<svg viewBox="-80 -40 1360 900" role="img" aria-label="车型几何示意剪影（爆炸拆解用）">
+  <defs>
+    <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2A323C"/><stop offset=".5" stop-color="#161B21"/><stop offset="1" stop-color="#0A0D11"/>
+    </linearGradient>
+    <radialGradient id="gShadow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="rgba(0,0,0,.85)"/><stop offset="1" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <linearGradient id="gBeam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="rgba(198,255,0,.55)"/><stop offset="1" stop-color="rgba(198,255,0,0)"/>
+    </linearGradient>
+    <clipPath id="clipSwap"><rect data-role="swapRect" x="-1400" y="-40" width="1400" height="900" style="transition:transform .62s cubic-bezier(.22,.61,.36,1)"/></clipPath>
+  </defs>
+
+  <!-- 地面 -->
+  <line x1="-80" y1="620" x2="1280" y2="620" stroke="rgba(255,255,255,.10)" stroke-dasharray="6 10"/>
+  <ellipse cx="580" cy="624" rx="440" ry="20" fill="url(#gShadow)"/>
+
+  <!-- 大灯光束 -->
+  <g class="beamfx"><path d="M906 300 L1200 240 L1200 380 L910 352 Z" fill="url(#gBeam)"/></g>
+
+  <!-- 后轮（固定：轮辋 + 胎） -->
+  <g>
+    <circle cx="272" cy="500" r="104" fill="#080A0D" stroke="rgba(255,255,255,.16)" stroke-width="3"/>
+    <circle cx="272" cy="500" r="88" fill="none" stroke="rgba(255,255,255,.20)" stroke-width="2"/>
+    <g class="spin">
+      <circle cx="272" cy="500" r="60" fill="none" stroke="rgba(198,255,0,.55)" stroke-width="2.5"/>
+      <g stroke="rgba(255,255,255,.26)" stroke-width="3" stroke-linecap="round">
+        <line x1="272" y1="460" x2="272" y2="418"/><line x1="306.6" y1="480" x2="346.5" y2="457.4"/>
+        <line x1="306.6" y1="520" x2="346.5" y2="542.6"/><line x1="272" y1="540" x2="272" y2="582"/>
+        <line x1="237.4" y1="520" x2="197.5" y2="542.6"/><line x1="237.4" y1="480" x2="197.5" y2="457.4"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- 车体（可换色，双层用于液态擦除） -->
+  <g data-role="bodyOld">
+    <path data-role="bodyp" d="M318 498 L706 498 L744 536 L342 540 Z" fill="var(--body)" stroke="rgba(255,255,255,.24)" stroke-width="3" stroke-linejoin="round"/>
+    <path data-role="bodyp" d="M242 394 L436 370 L504 442 L446 494 L302 502 L234 454 Z" fill="var(--body)" stroke="rgba(255,255,255,.26)" stroke-width="3" stroke-linejoin="round"/>
+    <path data-role="bodyp" d="M700 498 L776 484 L842 264 L768 282 Z" fill="var(--body)" stroke="rgba(255,255,255,.26)" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+  <g data-role="bodyNew" clip-path="url(#clipSwap)">
+    <path d="M318 498 L706 498 L744 536 L342 540 Z" fill="var(--body2)" stroke="rgba(255,255,255,.24)" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M242 394 L436 370 L504 442 L446 494 L302 502 L234 454 Z" fill="var(--body2)" stroke="rgba(255,255,255,.26)" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M700 498 L776 484 L842 264 L768 282 Z" fill="var(--body2)" stroke="rgba(255,255,255,.26)" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+
+  <!-- 固定件：座垫 / 车把 / 尾灯 / 减震 -->
+  <g>
+    <path d="M256 382 L302 320 L464 304 L510 346 L494 382 Z" fill="#12161A" stroke="rgba(255,255,255,.28)" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M302 320 L464 304" stroke="rgba(198,255,0,.7)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M844 282 L936 256" stroke="rgba(255,255,255,.5)" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="942" cy="254" r="8" fill="#C6FF00"/>
+    <rect x="232" y="398" width="20" height="48" rx="8" fill="#FF6B00" opacity=".8"/>
+    <path d="M428 496 L398 552" stroke="#FF6B00" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+    <path d="M342 540 L342 500" stroke="rgba(255,255,255,.15)" stroke-width="2"/>
+  </g>
+
+  <!-- 大灯 -->
+  <g><path d="M836 296 L904 284 L914 344 L848 350 Z" fill="#0E1216" stroke="rgba(255,255,255,.3)" stroke-width="3"/>
+     <path d="M848 306 L894 296 L900 330 L854 336 Z" fill="url(#gBeam)" class="beamfx"/></g>
+
+  <!-- ▲ 部件：电池 -->
+  <g class="part" data-part="battery">
+    <rect x="372" y="500" width="330" height="60" rx="14" fill="#0D1116" stroke="rgba(255,255,255,.3)" stroke-width="3"/>
+    <rect data-role="cell" x="380" y="504" width="300" height="10" rx="5" fill="#C6FF00" opacity=".5"/>
+    <g stroke="rgba(255,255,255,.16)" stroke-width="2">
+      <line x1="430" y1="518" x2="430" y2="554"/><line x1="488" y1="518" x2="488" y2="554"/>
+      <line x1="546" y1="518" x2="546" y2="554"/><line x1="604" y1="518" x2="604" y2="554"/>
+      <line x1="662" y1="518" x2="662" y2="554"/>
+    </g>
+    <text x="537" y="541" text-anchor="middle" font-family="ui-monospace,monospace" font-size="15"
+          letter-spacing="4" fill="rgba(255,255,255,.45)">BATTERY</text>
+  </g>
+
+  <!-- ▲ 部件：电机（后轮毂） -->
+  <g class="part" data-part="motor">
+    <circle cx="272" cy="500" r="36" fill="#0F1319" stroke="rgba(255,255,255,.35)" stroke-width="3"/>
+    <circle cx="272" cy="500" r="36" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="7 6" opacity=".85"/>
+    <g stroke="rgba(255,255,255,.28)" stroke-width="2">
+      <line x1="272" y1="464" x2="272" y2="536"/><line x1="236" y1="500" x2="308" y2="500"/>
+    </g>
+    <circle cx="272" cy="500" r="8" fill="#00E5FF"/>
+  </g>
+
+  <!-- ▲ 部件：制动（前盘 + 卡钳） -->
+  <g class="part" data-part="brake">
+    <circle cx="896" cy="500" r="58" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="4" stroke-dasharray="5 5"/>
+    <circle cx="896" cy="500" r="26" fill="#0E1216" stroke="rgba(255,255,255,.3)" stroke-width="3"/>
+    <path d="M896 442 A58 58 0 0 1 954 500" fill="none" stroke="#FF6B00" stroke-width="8" stroke-linecap="round"/>
+    <rect x="946" y="474" width="30" height="34" rx="7" fill="#FF6B00" opacity=".72"/>
+  </g>
+
+  <!-- ▲ 部件：轮胎与轮毂（前轮总成） -->
+  <g class="part" data-part="tire">
+    <path d="M796 424 A104 104 0 0 1 996 424" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="7"/>
+    <circle cx="896" cy="500" r="104" fill="#080A0D" stroke="rgba(255,255,255,.16)" stroke-width="3"/>
+    <circle cx="896" cy="500" r="88" fill="none" stroke="rgba(255,255,255,.20)" stroke-width="2"/>
+    <g class="spin">
+      <circle cx="896" cy="500" r="60" fill="none" stroke="rgba(198,255,0,.55)" stroke-width="2.5"/>
+      <g stroke="rgba(255,255,255,.26)" stroke-width="3" stroke-linecap="round">
+        <line x1="896" y1="460" x2="896" y2="418"/><line x1="930.6" y1="480" x2="970.5" y2="457.4"/>
+        <line x1="930.6" y1="520" x2="970.5" y2="542.6"/><line x1="896" y1="540" x2="896" y2="582"/>
+        <line x1="861.4" y1="520" x2="821.5" y2="542.6"/><line x1="861.4" y1="480" x2="821.5" y2="457.4"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ▲ 部件：智能系统（仪表 + 天线 + 传感器） -->
+  <g class="part" data-part="smart">
+    <rect x="794" y="234" width="70" height="44" rx="9" fill="#0B0F14" stroke="rgba(255,255,255,.34)" stroke-width="3"/>
+    <path d="M806 256 H852" stroke="#C6FF00" stroke-width="3"/>
+    <circle cx="810" cy="268" r="3" fill="#00E5FF"/><circle cx="824" cy="268" r="3" fill="#00E5FF"/>
+    <circle cx="838" cy="268" r="3" fill="#00E5FF"/>
+    <path d="M864 234 L896 198" stroke="rgba(255,255,255,.4)" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="898" cy="195" r="5" fill="#00E5FF"/>
+    <path d="M898 180 A16 16 0 0 1 914 196" fill="none" stroke="#00E5FF" stroke-width="2" opacity=".7"/>
+    <path d="M898 168 A28 28 0 0 1 926 196" fill="none" stroke="#00E5FF" stroke-width="2" opacity=".4"/>
+    <circle cx="752" cy="330" r="4.5" fill="#00E5FF" opacity=".85"/>
+  </g>
+
+  <!-- 连线（JS 注入） -->
+  <g data-role="leaders"></g>
+</svg>
+</template>
+
+<script>
+(function(){
+  "use strict";
+  /* ============ 数据（占位示例，可替换为官方数据） ============ */
+  var MODELS=[
+    {id:"nova-c1",series:"city-flow",name:"NOVA C1",sub:"轻量入门通勤",price:null,demoPrice:3199,
+     range:60,speed:25,battery:{type:"锂电池",voltage:"48V",capacity:"20Ah"},
+     motor:{type:"直驱轮毂电机",rated:"400W",peak:"—"},
+     brake:{front:"鼓刹",rear:"鼓刹",assist:["EABS 能量回收"]},
+     feat:["RideyGo 感应解锁","离车自动落锁","App 远程控制","整车 OTA","定位防盗","能量回收"],
+     scenes:["通勤","城市"],colors:[{n:"雾白",h:"#EDEDED"},{n:"荧光绿",h:"#C6FF00"},{n:"石墨黑",h:"#1A1A1A"}]},
+    {id:"nova-c2",series:"city-flow",name:"NOVA C2",sub:"城市穿梭进阶",price:null,demoPrice:4299,
+     range:95,speed:45,battery:{type:"锂电池",voltage:"60V",capacity:"26Ah"},
+     motor:{type:"直驱轮毂电机",rated:"1200W",peak:"—"},
+     brake:{front:"碟刹",rear:"碟刹",assist:["EABS 能量回收","TCS 牵引力控制"]},
+     feat:["RideyGo 感应解锁","离车自动落锁","App 远程控制","整车 OTA","定速巡航","定位防盗","能量回收","胎压提示"],
+     scenes:["通勤","城市","夜骑"],colors:[{n:"荧光绿",h:"#C6FF00"},{n:"电光蓝",h:"#00E5FF"},{n:"沙岩灰",h:"#8A8A82"}]},
+    {id:"volt-p1",series:"voltage-pro",name:"VOLT P1",sub:"性能电摩入门",price:null,demoPrice:6999,
+     range:110,speed:80,battery:{type:"锂电池",voltage:"72V",capacity:"32Ah"},
+     motor:{type:"直驱轮毂电机",rated:"3000W",peak:"—"},
+     brake:{front:"液压碟刹",rear:"液压碟刹",assist:["EABS 能量回收","TCS 牵引力控制"]},
+     feat:["RideyGo 感应解锁","整车 OTA","FOC 矢量控制","App 远程控制","定速巡航","定位防盗","能量回收","骑行数据回传"],
+     scenes:["城市","夜骑","长途"],colors:[{n:"电光蓝",h:"#00E5FF"},{n:"石墨黑",h:"#1A1A1A"},{n:"能量橙",h:"#FF6B00"}]},
+    {id:"volt-p2",series:"voltage-pro",name:"VOLT P2",sub:"性能旗舰",price:null,demoPrice:12999,
+     range:160,speed:120,battery:{type:"锂电池",voltage:"高压平台",capacity:"—"},
+     motor:{type:"直驱轮毂电机",rated:"—",peak:"—"},
+     brake:{front:"液压碟刹 + ABS",rear:"液压碟刹",assist:["EABS 能量回收","TCS 牵引力控制","ABS 防抱死"]},
+     feat:["RideyGo 感应解锁","整车 OTA","FOC 矢量控制","TCS 牵引力控制","ABS 防抱死","App 远程控制","定位防盗","能量回收","骑行数据回传"],
+     scenes:["夜骑","长途","城市"],colors:[{n:"能量橙",h:"#FF6B00"},{n:"石墨黑",h:"#1A1A1A"},{n:"荧光绿",h:"#C6FF00"}]},
+    {id:"terra-x1",series:"terra-x",name:"TERRA X1",sub:"城郊探索",price:null,demoPrice:5299,
+     range:70,speed:25,battery:{type:"锂电池",voltage:"48V",capacity:"24Ah"},
+     motor:{type:"直驱轮毂电机",rated:"600W",peak:"—"},
+     brake:{front:"碟刹",rear:"碟刹",assist:["EABS 能量回收"]},
+     feat:["RideyGo 感应解锁","整车 OTA","App 远程控制","定位防盗","能量回收"],
+     scenes:["越野","城市"],colors:[{n:"旷野橄榄",h:"#6B7A4A"},{n:"石墨黑",h:"#1A1A1A"},{n:"能量橙",h:"#FF6B00"}]},
+    {id:"terra-x2",series:"terra-x",name:"TERRA X2",sub:"全地形进阶",price:null,demoPrice:7999,
+     range:110,speed:60,battery:{type:"锂电池",voltage:"60V",capacity:"32Ah"},
+     motor:{type:"直驱轮毂电机",rated:"2000W",peak:"—"},
+     brake:{front:"液压碟刹",rear:"液压碟刹",assist:["EABS 能量回收","TCS 牵引力控制"]},
+     feat:["RideyGo 感应解锁","整车 OTA","FOC 矢量控制","TCS 牵引力控制","App 远程控制","定位防盗","能量回收","胎压提示"],
+     scenes:["越野","长途","夜骑"],colors:[{n:"能量橙",h:"#FF6B00"},{n:"旷野橄榄",h:"#6B7A4A"},{n:"深青",h:"#00555E"}]}
+  ];
+  var SERIESNAME={"city-flow":"CITY FLOW · 城市流动系列","voltage-pro":"VOLTAGE PRO · 高压性能系列","terra-x":"TERRA X · 全地形探索系列"};
+
+  /* 拆解部件：dir=爆开位移(viewBox单位) center=初始中心(viewBox) win=滚动窗口 */
+  var PARTS=[
+    {id:"battery",en:"BATTERY",cn:"电池组",     dir:[0,96],    center:[537,530], win:[0.10,0.28]},
+    {id:"motor",  en:"MOTOR",  cn:"轮毂电机",   dir:[-152,40], center:[272,500], win:[0.28,0.46]},
+    {id:"brake",  en:"BRAKE",  cn:"制动系统",   dir:[92,-106], center:[896,500], win:[0.46,0.63]},
+    {id:"tire",   en:"TIRE",   cn:"轮胎与轮毂", dir:[64,104],  center:[896,500], win:[0.63,0.80]},
+    {id:"smart",  en:"SMART",  cn:"智能系统",   dir:[28,-142], center:[828,256], win:[0.80,0.98]}
+  ];
+  var SW=1400;   /* 换色擦除用的 clip 宽度 */
+  /* 徽章相对"完全爆开位置"的额外偏移（viewBox 单位），保证五个徽章互不遮挡也不压住部件 */
+  var BADGEOFF={battery:[0,110],motor:[0,80],brake:[86,0],tire:[150,0],smart:[0,-56]};
+
+  var $=function(s,r){return (r||document).querySelector(s)};
+  var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+  var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root=document.documentElement, body=document.body;
+  var TPL=$('#tplvs').innerHTML;
+
+  /* ============ 舞台：从模板生成独立实例（id 加后缀避免重复） ============ */
+  var stages={};
+  function buildStage(kind){
+    var html=TPL.replace(/id="([^"]+)"/g,'id="$1__'+kind+'"').replace(/url\(#([^)]+)\)/g,'url(#$1__'+kind+')');
+    var wrap=document.createElement('div');
+    wrap.innerHTML=html;
+    var svg=wrap.firstElementChild;
+    if(kind!=="A"){ var bn=svg.querySelector('[data-role="bodyNew"]'); if(bn)bn.remove();
+                    var cp=svg.querySelector('clipPath'); if(cp)cp.remove(); }
+    stages[kind]=svg;
+    return svg;
+  }
+  ['A','B','C'].forEach(function(k){ var c=$('#stage'+k); c.appendChild(buildStage(k)); });
+  /* chip 已改为 SVG 内徽章，无需再搬移节点 */
+
+  /* ============ 状态 ============ */
+  var S={id:null,color:0,wheel:false,light:true,eco:0};
+
+  /* ============ 渲染一个车型 ============ */
+  function modelById(id){ for(var i=0;i<MODELS.length;i++) if(MODELS[i].id===id) return MODELS[i]; return MODELS[0]; }
+
+  function render(m,keepColor){
+    S.id=m.id;
+    $('#mSeries').textContent=SERIESNAME[m.series]||"";
+    $('#mTitle').innerHTML=m.name+'<small id="mSub">'+m.sub+'</small>';
+    document.title=m.name+" · 拆解｜九号电流宇宙（非官方）";
+    $('#kRange').textContent=m.range; $('#kSpeed').textContent=m.speed;
+    $('#kPrice').textContent=m.price==null?"—":"¥"+m.price;
+    $('#pPrice').textContent=m.price==null?"—":"¥"+m.price;
+    $('#hRange').textContent=m.range; $('#hSpeed').textContent=m.speed;
+    $('#lnCompare').href="04a-compare.html?ids="+m.id;
+    $('#lnConfig').href="04b-configurator.html?id="+m.id;
+    // 规格表
+    var rows=[["系列",(SERIESNAME[m.series]||"").split(" · ")[1]||""],
+              ["续航（示意）",m.range+" km"],["最高速度（示意）",m.speed+" km/h"],
+              ["电池",m.battery.type+" · "+m.battery.voltage+" · "+m.battery.capacity],
+              ["电机",m.motor.type+" · 额定 "+m.motor.rated],
+              ["制动",m.brake.front+" / "+m.brake.rear+" · "+m.brake.assist.join(" ")],
+              ["价格",m.price==null?"—（待补官方价）":"¥"+m.price]];
+    $('#specTable').innerHTML=rows.map(function(r){
+      return '<tr><td class="k">'+r[0]+'</td><td>'+r[1]+
+      ' <span class="badge">示例</span></td></tr>';}).join("");
+    $('#feat').innerHTML=m.feat.map(function(f){return '<span class="chip">'+f+'</span>'}).join("");
+    $('#sceneChips').innerHTML=m.scenes.map(function(s){return '<span class="chip">'+s+'</span>'}).join("");
+    // 配色
+    if(!keepColor) S.color=0;
+    $('#swatches').innerHTML=m.colors.map(function(c,i){
+      return '<button class="swbtn" data-i="'+i+'" aria-pressed="'+(i===S.color)+'" title="'+c.n+'" '+
+      'aria-label="配色 '+c.n+'" style="background:'+c.h+'"></button>';}).join("");
+    $$('#swatches .swbtn').forEach(function(b){
+      b.addEventListener('click',function(){
+        var i=+b.dataset.i; if(i===S.color) return;
+        $$('#swatches .swbtn').forEach(function(x){x.setAttribute('aria-pressed',String(+x.dataset.i===i))});
+        applyColor(m.colors[i].h,true);
+        S.color=i;
+      });
+    });
+    applyColor(m.colors[S.color].h,false);
+    // 车型切换按钮
+    $$('#mdlbar .pill').forEach(function(p){ p.setAttribute('aria-pressed',String(p.dataset.id===m.id)); });
+    try{ history.replaceState(null,'','?id='+m.id); }catch(e){}
+    resetExplode();
+  }
+
+  /* 液态换色：bodyNew（--body2）是新色，clip 从左侧扫到右侧盖住 bodyOld（--body）。
+     关键顺序：旧色不能提前变，否则擦除看不到 —— --body 必须等扫完再同步。 */
+  function setBody(hex){
+    ['A','B','C'].forEach(function(k){
+      if(stages[k]) stages[k].style.setProperty("--body",hex);
+    });
+  }
+  function applyColor(hex,animate){
+    ['A','B','C'].forEach(function(k){
+      if(stages[k]) stages[k].style.setProperty("--body2",hex);
+    });
+    var svgA=stages["A"]; if(!svgA) return;
+    var rect=svgA.querySelector('[data-role="swapRect"]');
+    if(!rect){ return; }
+    var reset=function(){ rect.style.transition='none'; rect.style.transform='translateX(-'+SW+'px)'; };
+    if(!animate){ setBody(hex); reset(); return; }
+    reset(); void rect.getBoundingClientRect();          /* 强制重排，让下一帧成为新起点 */
+    rect.style.transition='transform .62s cubic-bezier(.22,.61,.36,1)';
+    rect.style.transform='translateX(0px)';
+    setTimeout(function(){ setBody(hex); reset(); },660);
+  }
+
+  /* ============ 拆解：滚动驱动 ============ */
+  var rail=$('#rail'), specBox=$('#spec'), badges={}, badgeG={};
+  var leadG=stages["B"].querySelector('[data-role="leaders"]');
+  PARTS.forEach(function(p,i){
+    var no=('0'+(i+1)).slice(-2);
+    rail.insertAdjacentHTML('beforeend',
+      '<div class="railrow" data-rail="'+p.id+'"><i></i><b>'+no+' '+p.en+'</b><span>'+p.cn+'</span></div>');
+    leadG.insertAdjacentHTML('beforeend',
+      '<g class="badge-g" data-badge="'+p.id+'" opacity="0">'+
+        '<line class="tick" x1="0" y1="0" x2="0" y2="0"/>'+
+        '<circle cx="0" cy="0" r="20"/>'+
+        '<text x="0" y="0" text-anchor="middle" dy="6">'+no+'</text>'+
+      '</g>');
+    badgeG[p.id]=leadG.querySelector('[data-badge="'+p.id+'"]');
+  });
+  function easeIO(t){ return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
+
+  function specFor(id,m){
+    if(id==="battery") return [["电芯类型",m.battery.type],["电压平台",m.battery.voltage],["容量",m.battery.capacity]];
+    if(id==="motor")   return [["电机形式",m.motor.type],["额定功率",m.motor.rated],["峰值功率",m.motor.peak||"—"]];
+    if(id==="brake")   return [["前制动",m.brake.front],["后制动",m.brake.rear],["电控辅助",m.brake.assist.join(" / ")]];
+    if(id==="tire")    return [["规格","—（待补官方数据）"],["影响","滚阻 · 抓地 · 制动距离"]];
+    if(id==="smart")   return [["功能项数",m.feat.length+" 项"],["包含",m.feat.slice(0,3).join(" / ")]];
+    return [];
+  }
+  var lastActive=null;
+  function showSpec(p,m){
+    if(lastActive===p.id) return;
+    lastActive=p.id;
+    $('#hudStep').textContent=(PARTS.indexOf(p)+1)+" / "+PARTS.length;
+    $$('#rail .railrow').forEach(function(r){
+      var i=PARTS.map(function(x){return x.id}).indexOf(r.dataset.rail);
+      r.classList.toggle("act",r.dataset.rail===p.id);
+      r.classList.toggle("done",i<PARTS.indexOf(p));
+    });
+    specBox.innerHTML='<div class="fadein"><div class="sk">'+p.en+'</div><div class="sc">'+p.cn+'</div>'+
+      specFor(p.id,m).map(function(r){
+        return '<div class="specrow"><span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span></div>';
+      }).join("")+'<div style="margin-top:8px"><span class="badge">示意值 · 非官方数据</span></div></div>';
+  }
+
+  var ecoFill=$('#ecoFill'), ecoTxt=$('#ecoTxt');
+  var recovery={}   /* 能量回收粒子 */
+
+  function setProgress(p,m){
+    var actId=null;
+    for(var i=0;i<PARTS.length;i++){ if(p>=PARTS[i].win[0]-0.03) actId=PARTS[i].id; }
+    PARTS.forEach(function(pt){
+      var e=0;
+      if(RM){ e=1; }
+      else { var t=(p-pt.win[0])/(pt.win[1]-pt.win[0]); e=easeIO(Math.max(0,Math.min(1,t))); }
+      var g=stages["B"].querySelector('[data-part="'+pt.id+'"]');
+      if(g) g.setAttribute("transform","translate("+(pt.dir[0]*e).toFixed(1)+","+(pt.dir[1]*e).toFixed(1)+")");
+      var chip=badgeG[pt.id];
+      var bo=BADGEOFF[pt.id]||[0,0];
+      var bx=pt.center[0]+(pt.dir[0]+bo[0])*e, by=pt.center[1]+(pt.dir[1]+bo[1])*e;
+      chip.setAttribute("transform","translate("+bx.toFixed(1)+","+by.toFixed(1)+")");
+      chip.setAttribute("opacity", e>0.45?Math.min(1,(e-0.45)/0.25).toFixed(2):"0");
+      chip.classList.toggle("bact", !RM && pt.id===actId);
+      /* 短引线：从徽章边缘指向部件本体 */
+      var pcx=pt.center[0]+pt.dir[0]*e, pcy=pt.center[1]+pt.dir[1]*e;
+      var vx=pcx-bx, vy=pcy-by, vl=Math.max(1,Math.hypot(vx,vy));
+      var tk=chip.querySelector('.tick');
+      tk.setAttribute("x1",(bx+vx/vl*20).toFixed(1)); tk.setAttribute("y1",(by+vy/vl*20).toFixed(1));
+      tk.setAttribute("x2",(bx+vx/vl*46).toFixed(1)); tk.setAttribute("y2",(by+vy/vl*46).toFixed(1));
+    });
+    if(actId){
+      var ap=PARTS.filter(function(x){return x.id===actId})[0];
+      if(ap && !RM) showSpec(ap,m);
+      else if(RM) showSpec(ap,m);
+    }
+  }
+  function resetExplode(){
+    lastActive=null; lastP=-1; setProgress(0,modelById(S.id));
+    $('#hudStep').textContent="0 / "+PARTS.length;
+    PARTS.forEach(function(p){ badgeG[p.id].setAttribute('opacity','0'); badgeG[p.id].classList.remove('bact'); });
+    $$('#rail .railrow').forEach(function(r){r.classList.remove('act','done')});
+    specBox.innerHTML='<div class="sk">SCROLL</div><div class="sc">向下滚动开始拆解</div>'+
+      '<div style="color:var(--mid);font-size:.84rem">电池 → 电机 → 制动 → 轮胎 → 智能系统，逐层浮出。</div>';
+  }
+
+  /* ============ 滚动绑定 ============ */
+  var secE=$('#explode'), secR=$('#recover'), ticking=false;
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      var m=modelById(S.id);
+      // 拆解
+      var r=secE.getBoundingClientRect();
+      var total=secE.offsetHeight-window.innerHeight;
+      var p=total>0?Math.max(0,Math.min(1,-r.top/total)):0;
+      if(Math.abs(p-lastP)>0.0008){ lastP=p; setProgress(p,m); }
+      // 能量回收
+      var r2=secR.getBoundingClientRect();
+      var t2=secR.offsetHeight-window.innerHeight;
+      var p2=t2>0?Math.max(0,Math.min(1,-r2.top/t2)):0;
+      if(Math.abs(p2-lastP2)>0.002){ lastP2=p2; setEco(p2,m); }
+    });
+  }
+  var lastP=-1,lastP2=-1;
+
+  /* ============ 能量回收 ============ */
+  var flowParts=[];
+  (function initFlow(){
+    var svg=stages["C"], g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('data-role','flow');
+    var d="M896 500 C 800 452, 690 592, 560 546";
+    g.innerHTML='<path data-role="flowpath" d="'+d+'" fill="none" stroke="rgba(255,107,0,.45)" '+
+      'stroke-width="2" stroke-dasharray="7 8" opacity="0"/>';
+    for(var i=0;i<11;i++){
+      var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('r',(2.2+Math.random()*2.4).toFixed(1)); c.setAttribute('fill','#FF6B00');
+      c.setAttribute('opacity','0'); g.appendChild(c);
+    }
+    svg.appendChild(g);
+    var path=g.querySelector('[data-role="flowpath"]');
+    flowParts={g:g, path:path, nodes:$$('circle',g), len:0, t:0};
+    setTimeout(function(){ try{ flowParts.len=path.getTotalLength(); }catch(e){ flowParts.len=0; } },0);
+  })();
+
+  function setEco(p,m){
+    var e=RM?1:easeIO(Math.max(0,Math.min(1,p*1.15)));
+    root.style.setProperty('--v-eco',e.toFixed(3));
+    ecoFill.style.width=(e*100).toFixed(1)+"%";
+    ecoTxt.textContent=Math.round(e*100)+"%";
+    flowParts.path.setAttribute('opacity',(e*0.9).toFixed(2));
+    if(flowParts.len){
+      flowParts.nodes.forEach(function(n,i){
+        var t=((flowParts.t*(0.16+e*0.3))+(i/flowParts.nodes.length))%1;
+        var pt=flowParts.path.getPointAtLength(t*flowParts.len);
+        n.setAttribute('cx',pt.x.toFixed(1)); n.setAttribute('cy',pt.y.toFixed(1));
+        n.setAttribute('opacity',(e*0.95).toFixed(2));
+      });
+    }
+    var bar=stages["C"].querySelector('[data-role="cell"]');
+    if(bar) bar.setAttribute('width',(40+260*e).toFixed(1));
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll,{passive:true});
+
+  /* ============ 开关 / 交互 ============ */
+  $('#btnWheel').addEventListener('click',function(){
+    S.wheel=!S.wheel; this.setAttribute('aria-pressed',String(S.wheel));
+    body.classList.toggle('rolling',S.wheel);
+  });
+  $('#btnLight').addEventListener('click',function(){
+    S.light=!S.light; this.setAttribute('aria-pressed',String(S.light));
+    body.classList.toggle('lights',S.light);
+  });
+  $('#mdlbar').addEventListener('click',function(e){
+    var b=e.target.closest('.pill'); if(!b) return;
+    render(modelById(b.dataset.id));
+    onScroll();
+    window.scrollTo({top:0,behavior:RM?'auto':'smooth'});
+  });
+
+  /* ============ 启动 ============ */
+  (function init(){
+    // 车型切换条（同系列排在前面）
+    var q=new URLSearchParams(location.search).get('id');
+    var cur=modelById(q||"nova-c2");
+    var ordered=MODELS.slice().sort(function(a,b){
+      var A=a.series===cur.series?0:1, B=b.series===cur.series?0:1; return A-B;});
+    $('#mdlbar').innerHTML=ordered.map(function(m){
+      return '<button class="pill" data-id="'+m.id+'" aria-pressed="false">'+m.name+'</button>';}).join("");
+    body.classList.add('lights');
+    render(cur);
+    // 数字滚动
+    if(!RM){
+      $$('.metric .v span, .hudfoot .big span').forEach(function(el){
+        var to=+el.textContent||0; if(!to) return;
+        var t0=performance.now(), D=1200;
+        (function step(now){ var k=Math.min(1,(now-t0)/D), e2=1-Math.pow(1-k,3);
+          el.textContent=Math.round(to*e2); if(k<1) requestAnimationFrame(step); })(t0);
+      });
+    }
+    onScroll();
+    // 能量回收粒子动画
+    (function loop(){ if(!RM){ flowParts.t+=0.004; setEco(lastP2<0?0:lastP2,modelById(S.id)); } requestAnimationFrame(loop); })();
+  })();
+})();
+</script>
+</body>
+</html>

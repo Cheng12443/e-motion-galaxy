@@ -23,7 +23,7 @@ GitHub Pages：<https://cheng12443.github.io/e-motion-galaxy/>
 |---|---|---|---|
 | R2 | `01-hero.html` | 首页 Hero：电流环充能启动、车辆驶出、HUD 数字滚动、指针视差、日/夜氛围、Web Audio 合成音（默认静音） | 已完成 |
 | R3 | `02-galaxy.html` | 系列星系：Canvas 透视投影的 3 颗行星，拖拽旋转 / 滚轮缩放 / 点击镜头推进 + 电流环转场，集齐 3 个解锁「电流大师」 | 已完成 |
-| R4 | `03-model.html` | 车型详情：滚动触发爆炸拆解（电池 / 电机 / 制动 / 轮胎 / 智能系统）、部件连线与电流流动、能量回收可视化 | 待生成 |
+| R4 | `03-model.html` | 车型详情：滚动触发爆炸拆解（电池 / 电机 / 制动 / 轮胎 / 智能系统）、编号徽章 + 引线标注、右侧 HUD 随滚动更新、能量回收可视化、配色切换 / 轮毂旋转 / 大灯开关，`?id=` 可切 6 个车型 | 已完成 |
 | R5 | `04a-compare.html`<br>`04b-configurator.html`<br>`04c-timeline.html` | 车型对比（雷达图生长）、配置器（Canvas 生成配置卡片）、品牌技术时间轴（光轨 + 滚动分支） | 待生成 |
 
 ## 交互速查
@@ -39,6 +39,7 @@ GitHub Pages：<https://cheng12443.github.io/e-motion-galaxy/>
 ├── index.html              站点索引（GitHub Pages 入口）
 ├── 01-hero.html            首页 Hero
 ├── 02-galaxy.html          系列星系
+├── 03-model.html           车型详情（爆炸拆解，?id=<modelId>）
 ├── data/
 │   ├── series.json         3 个系列
 │   ├── models.json         6 个车型
