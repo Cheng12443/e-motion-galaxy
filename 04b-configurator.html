@@ -384,6 +384,7 @@ footer.site .legal{margin:26px auto 0;max-width:var(--maxw);color:var(--lo);font
 
   /* ================= 配置卡片（Canvas） ================= */
   var card=$('#card'), cx=card.getContext('2d');
+  var CARD_W=1080, CARD_H=1440;   /* 画布尺寸提升到模块作用域：finish() 也要用（曾因局部变量 W/H 抛 ReferenceError） */
   function wrapText(ctx,text,x,y,maxW,lh){
     var line="",lines=[],i;
     for(i=0;i<text.length;i++){
@@ -396,7 +397,7 @@ footer.site .legal{margin:26px auto 0;max-width:var(--maxw);color:var(--lo);font
     return lines.length;
   }
   function drawCard(){
-    var m=byId(S.model), col=m.colors[S.ci][1], W=1080,H=1440;
+    var m=byId(S.model), col=m.colors[S.ci][1], W=CARD_W, H=CARD_H;
     var g=cx.createLinearGradient(0,0,W,H);
     g.addColorStop(0,'#080B0F'); g.addColorStop(.55,'#050505'); g.addColorStop(1,'#0A0F12');
     cx.fillStyle=g; cx.fillRect(0,0,W,H);
@@ -469,9 +470,9 @@ footer.site .legal{margin:26px auto 0;max-width:var(--maxw);color:var(--lo);font
     cx.fillText('非官方粉丝网站，仅用于学习与展示。', 70, 1412);
     cx.fillStyle='#5A636E'; cx.font='400 17px "Noto Sans SC",sans-serif';
     cx.fillText('辅助工具：DeepSeek · 创作者：苏好好 · 3348304834@qq.com', 550, 1412);
-    /* 角标 */
-    cx.fillStyle=col; cx.fillRect(W-24, 0, 8, 120);
-    cx.fillRect(0, H-8, 160, 8);
+    /* 角标（用模块级常量，别再用局部 W/H） */
+    cx.fillStyle=col; cx.fillRect(CARD_W-24, 0, 8, 120);
+    cx.fillRect(0, CARD_H-8, 160, 8);
   }
 
   /* ================= 事件 ================= */

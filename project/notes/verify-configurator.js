@@ -1,3 +1,30 @@
+/* EMG DEBUG PROBE —— 仅当 URL 带 ?debug=1 时浮出运行时报错，默认零副作用 */
+(function(){
+  if(!/[?&]debug=1/.test(location.search)) return;
+  var box=document.createElement('div'), n=0, buf='';
+  box.style.cssText='position:fixed;left:0;right:0;bottom:0;z-index:2147483647;max-height:40vh;overflow:auto;'+
+    'background:rgba(130,0,0,.94);color:#fff;font:12px/1.55 ui-monospace,SFMono-Regular,monospace;padding:8px 10px;'+
+    'border-top:2px solid #ff6b00;white-space:pre-wrap';
+  box.textContent='EMG DEBUG · 0 条运行时报错 ✓';
+  function add(kind,msg){
+    n++; buf+=kind+': '+msg+'\n';
+    box.textContent='EMG DEBUG · '+n+' 条\n'+buf;
+  }
+  window.addEventListener('error',function(e){
+    add('ERROR',(e.message||'')+' @ '+((e.filename||'').split('/').pop())+':'+e.lineno+':'+e.colno);
+  });
+  window.addEventListener('unhandledrejection',function(e){
+    add('PROMISE',String(e.reason&&e.reason.message||e.reason));
+  });
+  var ce=console.error;
+  console.error=function(){ add('console.error',Array.prototype.join.call(arguments,' ')); ce.apply(console,arguments); };
+  var w=console.warn;
+  console.warn=function(){ add('console.warn',Array.prototype.join.call(arguments,' ')); w.apply(console,arguments); };
+  if(document.body) document.body.appendChild(box);
+  else document.addEventListener('DOMContentLoaded',function(){ document.body.appendChild(box); });
+})();
+
+;
 
 (function(){
   "use strict";
@@ -172,6 +199,7 @@
 
   /* ================= 配置卡片（Canvas） ================= */
   var card=$('#card'), cx=card.getContext('2d');
+  var CARD_W=1080, CARD_H=1440;   /* 画布尺寸提升到模块作用域：finish() 也要用（曾因局部变量 W/H 抛 ReferenceError） */
   function wrapText(ctx,text,x,y,maxW,lh){
     var line="",lines=[],i;
     for(i=0;i<text.length;i++){
@@ -184,7 +212,7 @@
     return lines.length;
   }
   function drawCard(){
-    var m=byId(S.model), col=m.colors[S.ci][1], W=1080,H=1440;
+    var m=byId(S.model), col=m.colors[S.ci][1], W=CARD_W, H=CARD_H;
     var g=cx.createLinearGradient(0,0,W,H);
     g.addColorStop(0,'#080B0F'); g.addColorStop(.55,'#050505'); g.addColorStop(1,'#0A0F12');
     cx.fillStyle=g; cx.fillRect(0,0,W,H);
@@ -257,9 +285,9 @@
     cx.fillText('非官方粉丝网站，仅用于学习与展示。', 70, 1412);
     cx.fillStyle='#5A636E'; cx.font='400 17px "Noto Sans SC",sans-serif';
     cx.fillText('辅助工具：DeepSeek · 创作者：苏好好 · 3348304834@qq.com', 550, 1412);
-    /* 角标 */
-    cx.fillStyle=col; cx.fillRect(W-24, 0, 8, 120);
-    cx.fillRect(0, H-8, 160, 8);
+    /* 角标（用模块级常量，别再用局部 W/H） */
+    cx.fillStyle=col; cx.fillRect(CARD_W-24, 0, 8, 120);
+    cx.fillRect(0, CARD_H-8, 160, 8);
   }
 
   /* ================= 事件 ================= */
